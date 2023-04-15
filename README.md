@@ -1,4 +1,9 @@
 # OOP_Project
-سید علی سجادی --> 401101813
-محمد مهدی ستاری --> 401101802
-مهدی قلی زاده کلان --> 401102337
+this project will be a food delivery service similar to snappFood
+
+---
+
+### **team**
+- seyed ali sajadi
+- mahdi golizadeh 
+- mohammad mahdi sattari
