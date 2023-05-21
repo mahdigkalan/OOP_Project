@@ -1,8 +1,7 @@
 package Functions;
-
 import Classes.Admin;
+import Classes.Role;
 import Classes.User;
-
 public class Functions {
     public static void checkPassword(String password,String Role,String userName){
         boolean numberic = false ;
@@ -41,14 +40,85 @@ public class Functions {
         }
         if (numberic && capitalLetter && smallLetter && passwordLength >= 8){
             if (Role.equals("ADMIN")){
-                Admin admin = new Admin(userName,password) ;
-                Admin.adminArrayList.add(admin) ;
-                System.out.println("Account created successfully");
+                if (isUserNameUnique(userName,Role)){
+                    Admin admin = new Admin(userName,password) ;
+                    Admin.adminArrayList.add(admin) ;
+                    System.out.println("Account created successfully");
+                }else {
+                    System.out.println("An Admin exist with this username!");
+                }
             }else if (Role.equals("USER")){
-                User user = new User(userName,password) ;
-                User.userArrayList.add(user) ;
-                System.out.println("Account created successfully");
+                if (isUserNameUnique(userName,Role)){
+                    User user = new User(userName,password) ;
+                    User.userArrayList.add(user) ;
+                    System.out.println("Account created successfully");
+                }else {
+                    System.out.println("A User exist with this username!");
+                }
             }
         }
+    }
+    public static void LogIn(String password,String Role,String userName){
+        if (Role.equals("ADMIN")){
+            if (isUserNameUnique(userName,Role)){
+               System.out.println("This username does not exist!");
+            }else {
+                Admin admin = Admin.adminArrayList.get(findRoleIndex(userName,Role)) ;
+                if (admin.getPassword().equals(password)){
+                    Classes.Role.loggedInRole = admin ;
+                    Classes.Role.loggedInRoleExistance = true ;
+                    System.out.println("you are logged in as ADMIN!");
+                }else {
+                    System.out.println("password is incorrect!");
+                }
+            }
+        }else if (Role.equals("USER")){
+            if (isUserNameUnique(userName,Role)){
+                System.out.println("This username does not exist!");
+            }else {
+                User user = User.userArrayList.get(findRoleIndex(userName,Role)) ;
+                if (user.getPassword().equals(password)){
+                    Classes.Role.loggedInRole = user ;
+                    Classes.Role.loggedInRoleExistance = true ;
+                    System.out.println("you are logged in as USER!");
+                }else {
+                    System.out.println("password is incorrect!");
+                }
+            }
+        }
+    }
+    public static boolean isUserNameUnique(String UserName,String Role){
+        boolean isUserNameUnique = true ;
+        if (Role.equals("ADMIN")){
+            for (int i = 0 ; i < Admin.adminArrayList.size() ; i++){
+                if (Admin.adminArrayList.get(i).getUserName().equals(UserName)){
+                    isUserNameUnique = false ;
+                }
+            }
+        }else if (Role.equals("USER")){
+            for (int i = 0 ; i < User.userArrayList.size() ; i++){
+                if (User.userArrayList.get(i).getUserName().equals(UserName)){
+                    isUserNameUnique = false ;
+                }
+            }
+        }
+        return isUserNameUnique ;
+    }
+    public static int findRoleIndex(String userName,String Role){
+        int index = 0 ;
+        if (Role.equals("ADMIN")){
+            for (int i = 0 ; i < Admin.adminArrayList.size() ; i++){
+                if (Admin.adminArrayList.get(i).getUserName().equals(userName)){
+                    index = i ;
+                }
+            }
+        }else if (Role.equals("USER")){
+            for (int i = 0 ; i < User.userArrayList.size() ; i++){
+                if (User.userArrayList.get(i).getUserName().equals(userName)){
+                    index = i ;
+                }
+            }
+        }
+        return index ;
     }
 }
