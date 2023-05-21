@@ -5,5 +5,5 @@ this project will be a food delivery service similar to snappFood
 
 ### **team**
 - seyed ali sajadi
-- mahdi golizadeh 
+- mahdi gholizade 
 - mohammad mahdi sattari
