@@ -2,7 +2,11 @@ package Functions;
 import Classes.Admin;
 import Classes.Role;
 import Classes.User;
+
+import java.util.Scanner;
+
 public class Functions {
+    public static Scanner scanner = new Scanner(System.in) ;
     public static void checkPassword(String password,String Role,String userName){
         boolean numberic = false ;
         boolean capitalLetter = false ;
@@ -44,6 +48,7 @@ public class Functions {
                     Admin admin = new Admin(userName,password) ;
                     Admin.adminArrayList.add(admin) ;
                     System.out.println("Account created successfully");
+                    makeSecurityQuestion(admin);
                 }else {
                     System.out.println("An Admin exist with this username!");
                 }
@@ -52,6 +57,7 @@ public class Functions {
                     User user = new User(userName,password) ;
                     User.userArrayList.add(user) ;
                     System.out.println("Account created successfully");
+                    makeSecurityQuestion(user);
                 }else {
                     System.out.println("A User exist with this username!");
                 }
@@ -120,5 +126,30 @@ public class Functions {
             }
         }
         return index ;
+    }
+    public static void ForgetPassword(String Role,String userName){
+
+    }
+    public static void makeSecurityQuestion(Role role){
+        System.out.println("now please answer this security question for when you forget your password : ");
+        double randomNumber = (Math.random()) * 5 ;
+        int randomInt = (int) randomNumber ;
+        String Question = new String("");
+        String Answer ;
+        if (randomInt==0){
+            Question = new String("What is your favourite color ? : ") ;
+        }else if (randomInt==1){
+            Question = new String("What is your favourite food ? : ") ;
+        }else if (randomInt==2){
+            Question = new String("What is your favourite soccer team ? : ") ;
+        }else if (randomInt==3){
+            Question = new String("What is your favourite actor/actress ? : ") ;
+        }else if (randomInt==4){
+            Question = new String("What is your favourite movie ? : ") ;
+        }
+        System.out.println(Question);
+        role.securityQuestion = new String(Question) ;
+        String answer = scanner.nextLine() ;
+        role.setSecurityQuestionAnswer(answer);
     }
 }
