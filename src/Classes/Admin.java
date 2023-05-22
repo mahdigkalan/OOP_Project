@@ -20,5 +20,7 @@ public class Admin extends Role {
         return password;
     }
 
-
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

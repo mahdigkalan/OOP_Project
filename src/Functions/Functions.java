@@ -128,7 +128,31 @@ public class Functions {
         return index ;
     }
     public static void ForgetPassword(String Role,String userName){
-
+        if (Role.equals("ADMIN")){
+            Admin admin = Admin.adminArrayList.get(findRoleIndex(userName,Role)) ;
+            System.out.println("please answer following question to reset your password : ");
+            System.out.println(admin.securityQuestion);
+            String answer = scanner.nextLine() ;
+            if (answer.equals(admin.getSecurityQuestionAnswer())){
+                System.out.println("enter your new password : ");
+                String password = scanner.nextLine() ;
+                admin.setPassword(password);
+            }else{
+                System.out.println("your answer is incorrect!");
+            }
+        }else {
+            User user = User.userArrayList.get(findRoleIndex(userName,Role)) ;
+            System.out.println("please answer following question to reset your password : ");
+            System.out.println(user.securityQuestion);
+            String answer = scanner.nextLine() ;
+            if (answer.equals(user.getSecurityQuestionAnswer())){
+                System.out.println("enter your new password : ");
+                String password = scanner.nextLine() ;
+                user.setPassword(password);
+            }else{
+                System.out.println("your answer is incorrect!");
+            }
+        }
     }
     public static void makeSecurityQuestion(Role role){
         System.out.println("now please answer this security question for when you forget your password : ");

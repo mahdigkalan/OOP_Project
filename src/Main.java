@@ -28,7 +28,7 @@ public class Main {
                     }else {
                         System.out.println("There is no LoggedIn account!");
                     }
-                }else if(inputArray[0].equals("FORGET") &&inputArray[0].equals("PASSWORD") && inputArray.length == 4){
+                }else if(inputArray[0].equals("FORGET") &&inputArray[1].equals("PASSWORD") && inputArray.length == 4){
                     String Role = inputArray[2] ;
                     String userName = inputArray[3] ;
                     Functions.ForgetPassword(Role,userName);
