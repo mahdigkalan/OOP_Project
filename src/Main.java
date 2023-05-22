@@ -20,7 +20,7 @@ public class Main {
                     }
                 }else if (inputArray[0].equals("LOGIN") && inputArray.length == 4){
                     Functions.LogIn(inputArray[3],inputArray[1],inputArray[2]) ;
-                }else if (inputArray[0].equals("LOGOUT")){
+                }else if (input.equals("LOGOUT")){
                     if (Role.loggedInRoleExistance){
                         Role.loggedInRole = null ;
                         Role.loggedInRoleExistance = false ;
@@ -28,7 +28,12 @@ public class Main {
                     }else {
                         System.out.println("There is no LoggedIn account!");
                     }
-                }else {
+                }else if(inputArray[0].equals("FORGET") &&inputArray[0].equals("PASSWORD") && inputArray.length == 4){
+                    String Role = inputArray[2] ;
+                    String userName = inputArray[3] ;
+                    Functions.ForgetPassword(Role,userName);
+                }
+                else {
                     System.out.println("invalid command");
                 }
             }
