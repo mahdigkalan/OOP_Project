@@ -1,8 +1,5 @@
 package Functions;
-import Classes.Admin;
-import Classes.Restaurant;
-import Classes.Role;
-import Classes.User;
+import Classes.*;
 
 import java.util.Scanner;
 
@@ -203,6 +200,16 @@ public class Functions {
         Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
         for (int i = 0 ; i < restaurant.restaurantFoodType.size() ; i++){
             System.out.println( (i+1) +". "+restaurant.restaurantFoodType.get(i));
+        }
+    }
+    public static void setID(){
+
+    }
+    public static void showMenu(){
+        Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+        for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
+            Food food = restaurant.restaurantMenu.get(i) ;
+            System.out.println("food name : "+food.foodName+" * food id : "+food.foodID+" * food cost : "+food.foodCost+" * active discount : "+food.discountActivation+" * food rate : "+food.foodRate);
         }
     }
 }

@@ -39,10 +39,13 @@ public class Main {
                     Functions.searchRestaurant(admin,inputArray[1]);
                 }else if (inputArray[0].equals("ADD") && inputArray[2].equals("RESTAURANT") && inputArray.length == 2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin){
                     Admin admin = (Admin) Role.loggedInRole ;
+                    ///////////////////////////////////
 
-                }else if (inputArray[0].equals("SHOW") && inputArray[1].equals("FOODTYPE") && inputArray.length ==2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin){
+
+                    //////////////////////////////////
+                }else if (inputArray[0].equals("SHOW") && inputArray[1].equals("FOODTYPE") && inputArray.length ==2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null){
                     Functions.showFoodType();
-                }else if (inputArray[0].equals("ADD") && inputArray[1].equals("FOODTYPE") && inputArray.length ==2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin){
+                }else if (inputArray[0].equals("ADD") && inputArray[1].equals("FOODTYPE") && inputArray.length ==2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null){
                     Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
                     System.out.println("Add number of foodtypes you want to add : ");
                     int numberOfFoodTypes = scanner.nextInt() ;
@@ -50,7 +53,7 @@ public class Main {
                         String foodtype = scanner.nextLine() ;
                         restaurant.restaurantFoodType.add(foodtype) ;
                     }
-                }else if (inputArray[0].equals("EDIT") && inputArray[1].equals("FOODTYPE") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin){
+                }else if (inputArray[0].equals("EDIT") && inputArray[1].equals("FOODTYPE") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null){
                     Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
                     if (restaurant.restaurantOrders.size() > 0){
                         System.out.println("You can't edit food type when restaurant has active order!");
@@ -58,16 +61,16 @@ public class Main {
                         System.out.println("ARE YOU SURE YOU WANT TO CHANGE YOUR RESTAURANT TYPE? (enter yes or no)");
                         String answer = scanner.nextLine() ;
                         if (answer.toLowerCase().equals("yes")){
-                            Functions.showFoodType();
-                            System.out.println("Which FoodType you want to edit (add number of it) : ");
-                            int foodtypeNumber = scanner.nextInt() ;
-                            int firstIndex = inputArray[0].length() + inputArray[1].length() + 1 ;
-                            String foodtype = input.substring(firstIndex,input.length()) ;
-                            restaurant.restaurantFoodType.remove(foodtypeNumber-1) ;
-                            restaurant.restaurantFoodType.add(foodtype) ;
-                            System.out.println("edited succesfully!");
+                            restaurant.restaurantMenu.clear();
+                            restaurant.restaurantFoodType.clear();
+                            for (int i = 0 ; i < inputArray.length-2 ; i++){
+                                restaurant.restaurantFoodType.add(inputArray[i+2]) ;
+                            }
+                            System.out.println("food type edited succesfully , now you have to recreate your restaurant menu!");
                         }
                     }
+                }else if (inputArray[0].equals("SELECT") && inputArray[1].equals("MENU") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null){
+                    Functions.showMenu();
                 }
                 else {
                     System.out.println("invalid command");
