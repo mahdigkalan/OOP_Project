@@ -2,6 +2,7 @@ package Functions;
 import Classes.*;
 
 import java.util.Scanner;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Functions {
     public static Scanner scanner = new Scanner(System.in) ;
@@ -202,8 +203,30 @@ public class Functions {
             System.out.println( (i+1) +". "+restaurant.restaurantFoodType.get(i));
         }
     }
-    public static void setID(){
-
+    public static String setID(String thingString){
+        String firstchapter = new String("") ;
+        String ID = new String("") ;
+        int counter = 0 ;
+        int randomNumber = (int) ( ((Math.random()) * 9999) + 1 ) ;
+        if (thingString.equals("restaurant")){
+            firstchapter = new String("R") ;
+            Restaurant.counterIDRestaurant++ ;
+            counter = Restaurant.counterIDRestaurant ;
+        }else if (thingString.equals("food")){
+            firstchapter = new String("F") ;
+            Food.counterIDFood++ ;
+            counter = Food.counterIDFood ;
+        }else if (thingString.equals("comment")){
+            firstchapter = new String("C") ;
+            Comment.counterIDComment++ ;
+            counter = Comment.counterIDComment ;
+        }else if (thingString.equals("order")){
+            firstchapter = new String("O") ;
+            Order.countrIDOrder++ ;
+            counter = Order.countrIDOrder ;
+        }
+        ID = firstchapter + randomNumber + counter ;
+        return ID ;
     }
     public static void showMenu(){
         Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
@@ -211,5 +234,35 @@ public class Functions {
             Food food = restaurant.restaurantMenu.get(i) ;
             System.out.println("food name : "+food.foodName+" * food id : "+food.foodID+" * food cost : "+food.foodCost+" * active discount : "+food.discountActivation+" * food rate : "+food.foodRate);
         }
+    }
+    public static void editFood(String foodID,String changingParameters,String newValue){
+        Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+        Food food = new Food("",0) ;
+        for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
+            if (foodID.equals(restaurant.restaurantMenu.get(i).foodID)){
+                food = restaurant.restaurantMenu.get(i) ;
+            }
+        }
+        if (changingParameters.equals("NAME")){
+            food.foodName = newValue ;
+        }else if (changingParameters.equals("PRICE")){
+            food.foodCost = Integer.parseInt(newValue) ;
+        }else if (changingParameters.equals("DISCOUNT")){
+            if (food.discountActivation){
+                food.discountActivation = false ;
+            }else {
+                int discount = scanner.nextInt() ;
+                food.discountActivation = true ;
+                food.discountValue = discount ;
+            }
+        }
+    }
+    public static void addFood(String foodName,int foodCost){
+        Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+        Food food = new Food(foodName,foodCost) ;
+        food.foodID = setID("food") ;
+        restaurant.restaurantMenu.add(food) ;
+        Food.allFoodsArrayList.add(food) ;
+        System.out.println("food added to menu successfully!");
     }
 }
