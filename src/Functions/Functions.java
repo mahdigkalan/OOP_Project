@@ -1,5 +1,6 @@
 package Functions;
 import Classes.Admin;
+import Classes.Restaurant;
 import Classes.Role;
 import Classes.User;
 
@@ -49,6 +50,14 @@ public class Functions {
                     Admin.adminArrayList.add(admin) ;
                     System.out.println("Account created successfully");
                     makeSecurityQuestion(admin);
+                    if (admin.adminRestaurantNumbers == 1){
+                        Restaurant.loggedInRestaurantForAdmin = admin.adminRestaurants.get(0) ;
+                    }else {
+                        for (int i = 0 ; i < admin.adminRestaurantNumbers ; i++){
+                            Restaurant restaurant = admin.alphabeticSortOfAdminRestaurants.get(i) ;
+                            System.out.println("Restaurant Name : "+restaurant.restaurantName+"Restaurant ID : "+restaurant.restaurantID) ;
+                        }
+                    }
                 }else {
                     System.out.println("An Admin exist with this username!");
                 }
@@ -175,5 +184,25 @@ public class Functions {
         role.securityQuestion = new String(Question) ;
         String answer = scanner.nextLine() ;
         role.setSecurityQuestionAnswer(answer);
+    }
+    public static void searchRestaurant(Admin admin,String ID){
+        boolean restaurantExistance = false ;
+        for (int i = 0 ; i < admin.adminRestaurantNumbers ; i++){
+            if (admin.adminRestaurants.get(i).restaurantID.equals(ID)){
+                restaurantExistance = true ;
+                Restaurant.loggedInRestaurantForAdmin = admin.adminRestaurants.get(i) ;
+            }
+        }
+        if (restaurantExistance == false){
+            System.out.println("There is no Restaurant with this ID!");
+        }else {
+            System.out.println("We are at panel of "+Restaurant.loggedInRestaurantForAdmin.restaurantName+" with ID of "+Restaurant.loggedInRestaurantForAdmin.restaurantID);
+        }
+    }
+    public static void showFoodType(){
+        Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+        for (int i = 0 ; i < restaurant.restaurantFoodType.size() ; i++){
+            System.out.println( (i+1) +". "+restaurant.restaurantFoodType.get(i));
+        }
     }
 }

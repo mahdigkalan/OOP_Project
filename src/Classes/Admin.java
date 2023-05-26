@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public class Admin extends Role {
     public static ArrayList<Admin> adminArrayList = new ArrayList<Admin>() ;
+    public ArrayList<Restaurant> adminRestaurants = new ArrayList<Restaurant>() ;
+    public ArrayList<Restaurant> alphabeticSortOfAdminRestaurants = new ArrayList<Restaurant>() ;
+    public int adminRestaurantNumbers = 0 ;
     private String userName ;
     private String password ;
 
