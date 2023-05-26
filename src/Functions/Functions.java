@@ -48,14 +48,6 @@ public class Functions {
                     Admin.adminArrayList.add(admin) ;
                     System.out.println("Account created successfully");
                     makeSecurityQuestion(admin);
-                    if (admin.adminRestaurantNumbers == 1){
-                        Restaurant.loggedInRestaurantForAdmin = admin.adminRestaurants.get(0) ;
-                    }else {
-                        for (int i = 0 ; i < admin.adminRestaurantNumbers ; i++){
-                            Restaurant restaurant = admin.alphabeticSortOfAdminRestaurants.get(i) ;
-                            System.out.println("Restaurant Name : "+restaurant.restaurantName+"Restaurant ID : "+restaurant.restaurantID) ;
-                        }
-                    }
                 }else {
                     System.out.println("An Admin exist with this username!");
                 }
@@ -81,6 +73,14 @@ public class Functions {
                     Classes.Role.loggedInRole = admin ;
                     Classes.Role.loggedInRoleExistance = true ;
                     System.out.println("you are logged in as ADMIN!");
+                    if (admin.adminRestaurants.size() == 1){
+                        Restaurant.loggedInRestaurantForAdmin = admin.adminRestaurants.get(0) ;
+                    }else {
+                        for (int i = 0 ; i < admin.adminRestaurants.size() ; i++){
+                            Restaurant restaurant = admin.adminRestaurants.get(i) ;
+                            System.out.println("Restaurant Name : "+restaurant.restaurantName+"Restaurant ID : "+restaurant.restaurantID) ;
+                        }
+                    }
                 }else {
                     System.out.println("password is incorrect!");
                 }
@@ -185,7 +185,7 @@ public class Functions {
     }
     public static void searchRestaurant(Admin admin,String ID){
         boolean restaurantExistance = false ;
-        for (int i = 0 ; i < admin.adminRestaurantNumbers ; i++){
+        for (int i = 0 ; i < admin.adminRestaurants.size() ; i++){
             if (admin.adminRestaurants.get(i).restaurantID.equals(ID)){
                 restaurantExistance = true ;
                 Restaurant.loggedInRestaurantForAdmin = admin.adminRestaurants.get(i) ;

@@ -39,11 +39,14 @@ public class Main {
                 }else if (inputArray[0].equals("SELECT") && inputArray.length == 2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin){
                     Admin admin = (Admin) Role.loggedInRole ;
                     Functions.searchRestaurant(admin,inputArray[1]);
-                }else if (inputArray[0].equals("ADD") && inputArray[2].equals("RESTAURANT") && inputArray.length == 2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin){
+                }else if (inputArray[0].equals("ADD") && inputArray[1].equals("RESTAURANT") && inputArray.length == 2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin){
                     Admin admin = (Admin) Role.loggedInRole ;
+                    System.out.println("please enter yout restaurant name : ");
                     String restaurantName = scanner.nextLine() ;
                     Restaurant restaurant = new Restaurant(restaurantName) ;
                     restaurant.restaurantID = Functions.setID("restaurant") ;
+                    admin.adminRestaurants.add(restaurant) ;
+                    System.out.println("restaurant created successfully!");
                 }else if (inputArray[0].equals("SHOW") && inputArray[1].equals("FOODTYPE") && inputArray.length ==2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null){
                     Functions.showFoodType();
                 }else if (inputArray[0].equals("ADD") && inputArray[1].equals("FOODTYPE") && inputArray.length ==2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null){
