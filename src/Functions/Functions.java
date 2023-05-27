@@ -76,10 +76,7 @@ public class Functions {
                     if (admin.adminRestaurants.size() == 1){
                         Restaurant.loggedInRestaurantForAdmin = admin.adminRestaurants.get(0) ;
                     }else {
-                        for (int i = 0 ; i < admin.adminRestaurants.size() ; i++){
-                            Restaurant restaurant = admin.adminRestaurants.get(i) ;
-                            System.out.println("Restaurant Name : "+restaurant.restaurantName+"Restaurant ID : "+restaurant.restaurantID) ;
-                        }
+                        showRestaurantList(admin);
                     }
                 }else {
                     System.out.println("password is incorrect!");
@@ -230,9 +227,13 @@ public class Functions {
     }
     public static void showMenu(){
         Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
-        for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
-            Food food = restaurant.restaurantMenu.get(i) ;
-            System.out.println("food name : "+food.foodName+" * food id : "+food.foodID+" * food cost : "+food.foodCost+" * active discount : "+food.discountActivation+" * food rate : "+food.foodRate);
+        if (restaurant.restaurantMenu.size() == 0){
+            System.out.println("No food added to the menu yet!");
+        }else {
+            for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
+                Food food = restaurant.restaurantMenu.get(i) ;
+                System.out.println("food name : "+food.foodName+" * food id : "+food.foodID+" * food cost : "+food.foodCost+" * active discount : "+food.discountActivation+" * food rate : "+food.foodRate);
+            }
         }
     }
     public static void editFood(String foodID,String changingParameters,String newValue){
@@ -264,5 +265,11 @@ public class Functions {
         restaurant.restaurantMenu.add(food) ;
         Food.allFoodsArrayList.add(food) ;
         System.out.println("food added to menu successfully!");
+    }
+    public static void showRestaurantList(Admin admin){
+        for (int i = 0 ; i < admin.adminRestaurants.size() ; i++){
+            Restaurant restaurant = admin.adminRestaurants.get(i) ;
+            System.out.println("Restaurant Name : "+restaurant.restaurantName+" , Restaurant ID : "+restaurant.restaurantID) ;
+        }
     }
 }

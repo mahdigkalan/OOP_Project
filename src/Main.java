@@ -16,7 +16,7 @@ public class Main {
                 break ;
             }else {
                 String[] inputArray = input.split(" ") ;
-                if (inputArray[0].equals("ADD") && inputArray.length == 4){
+                if (inputArray[0].equals("ADD") && ( inputArray[1].equals("USER") || inputArray[1].equals("ADMIN") ) && inputArray.length == 4){
                     if (!inputArray[1].equals("ADMIN") && !inputArray[1].equals("USER")){
                         System.out.println("Choosen Role is Invalid!");
                     }else {
@@ -36,7 +36,7 @@ public class Main {
                     String Role = inputArray[2] ;
                     String userName = inputArray[3] ;
                     Functions.ForgetPassword(Role,userName);
-                }else if (inputArray[0].equals("SELECT") && inputArray.length == 2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin){
+                }else if (inputArray[0].equals("SELECT") && !inputArray[1].equals("MENU") && inputArray.length == 2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin){
                     Admin admin = (Admin) Role.loggedInRole ;
                     Functions.searchRestaurant(admin,inputArray[1]);
                 }else if (inputArray[0].equals("ADD") && inputArray[1].equals("RESTAURANT") && inputArray.length == 2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin){
@@ -47,7 +47,11 @@ public class Main {
                     restaurant.restaurantID = Functions.setID("restaurant") ;
                     admin.adminRestaurants.add(restaurant) ;
                     System.out.println("restaurant created successfully!");
-                }else if (inputArray[0].equals("SHOW") && inputArray[1].equals("FOODTYPE") && inputArray.length ==2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null){
+                }else if (inputArray[0].equals("SHOW") && inputArray[1].equals("RESTAURANT") && inputArray[2].equals("LIST") && inputArray.length == 3 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin){
+                    Admin admin = (Admin) Role.loggedInRole ;
+                    Functions.showRestaurantList(admin);
+                }
+                else if (inputArray[0].equals("SHOW") && inputArray[1].equals("FOODTYPE") && inputArray.length ==2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null){
                     Functions.showFoodType();
                 }else if (inputArray[0].equals("ADD") && inputArray[1].equals("FOODTYPE") && inputArray.length ==2 && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null){
                     Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
@@ -71,6 +75,10 @@ public class Main {
                                 restaurant.restaurantFoodType.add(inputArray[i+2]) ;
                             }
                             System.out.println("food type edited succesfully , now you have to recreate your restaurant menu!");
+                        }else if (answer.toLowerCase().equals("no")){
+
+                        }else {
+                            System.out.println("invalid command");
                         }
                     }
                 }else if (inputArray[0].equals("SELECT") && inputArray[1].equals("MENU") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && inputArray.length == 2){
@@ -80,9 +88,13 @@ public class Main {
                     String changingParameters = inputArray[3] ;
                     String newValue = inputArray[4] ;
                     Functions.editFood(foodID,changingParameters,newValue) ;
-                }else if (inputArray[0].equals("ADD") && inputArray[1].equals("FOOD") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && inputArray.length == 4){
-                    String foodName = inputArray[2] ;
-                    int foodCost = Integer.parseInt(inputArray[3]) ;
+                }else if (inputArray[0].equals("ADD") && inputArray[1].equals("FOOD") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null){
+                    String foodName = new String("") ;
+                    for (int i = 2 ; i < inputArray.length - 1 ; i++){
+                        foodName += inputArray[i] + " " ;
+                    }
+                    foodName = foodName.trim() ;
+                    int foodCost = Integer.parseInt(inputArray[inputArray.length-1]) ;
                     Functions.addFood(foodName,foodCost);
                 }
                 else {
