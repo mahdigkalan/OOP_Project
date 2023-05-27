@@ -1,6 +1,4 @@
-import Classes.Admin;
-import Classes.Restaurant;
-import Classes.Role;
+import Classes.*;
 import Functions.Functions;
 
 import java.lang.reflect.Field;
@@ -103,6 +101,63 @@ public class Main {
                 }else if (inputArray[0].equals("DEACTIVE") && inputArray[1].equals("FOOD") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && inputArray.length == 3){
                     String foodID = inputArray[2] ;
                     Functions.deactiveFood(foodID);
+                }else if (inputArray[0].equals("ACTIVE") && inputArray[1].equals("FOOD") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && inputArray.length == 3){
+                    String foodID = inputArray[2] ;
+                    Functions.activeFood(foodID);
+                }else if (inputArray[0].equals("DISCOUNT") && inputArray[1].equals("FOOD") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && inputArray.length == 5){
+                    String foodID = inputArray[2] ;
+                    int discountPercent = Integer.parseInt(inputArray[3]) ;
+                    int timestampHour = Integer.parseInt(inputArray[4]) ;
+                    Functions.discountFood(foodID,discountPercent,timestampHour);
+                }else if (inputArray[0].equals("SHOW") && inputArray[1].equals("LOCATION") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && inputArray.length == 2){
+                    Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+                    if (restaurant.restaurantLocation.trim().equals("")){
+                        System.out.println("Location doesn't accepted!");
+                    }else {
+                        System.out.println("Restaurant Location is : "+restaurant.restaurantLocation);
+                    }
+                }else if (inputArray[0].equals("EDIT") && inputArray[1].equals("LOCATION") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && inputArray.length == 2){
+                    Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+                    System.out.println("Please enter the restaurant location : ");
+                    String location = scanner.nextLine() ;
+                    restaurant.restaurantLocation = location ;
+                    System.out.println("Location edited successfully!");
+                }else if (inputArray[0].equals("SELECT") && inputArray[1].equals("FOOD") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && inputArray.length == 3){
+                    String foodID = inputArray[2] ;
+                    Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+                    boolean foodIDExistance = Functions.foodIDExistanceChecker(restaurant,foodID) ;
+                    if (foodIDExistance){
+                        Food food = Functions.foodIDfounder(restaurant,foodID) ;
+                        Food.selectedFood = food ;
+                    }else {
+                        System.out.println("this foodID doesn't exist in this restaurant!");
+                    }
+                }else if (inputArray[0].equals("DISPLAY") && inputArray[1].equals("RATINGS") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && Food.selectedFood != null && inputArray.length == 2){
+                    Food food = Food.selectedFood ;
+                    System.out.println(food.foodRatedNumber+" people rate this food and rating is : "+food.foodRate+" of 5 .");
+                }else if (inputArray[0].equals("DISPLAY") && inputArray[1].equals("COMMENTS") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && Food.selectedFood != null && inputArray.length == 2){
+                    Food food = Food.selectedFood ;
+                    if (food.foodCommentsArrayList.size() == 0 ){
+                        System.out.println("There is no comment yet!");
+                    }else {
+                        for(int i = 0 ; i < food.foodCommentsArrayList.size() ; i++){
+                            Comment comment = food.foodCommentsArrayList.get(i) ;
+                            System.out.println("User "+comment.commentedUser.getUserName()+" commented : "+comment.comment +" , comment ID : "+comment.commentID);
+                        }
+                    }
+                }else if (inputArray[0].equals("ADD") && inputArray[1].equals("NEW") && inputArray[2].equals("RESPONSE") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && Food.selectedFood != null){
+                    String commentID = inputArray[3] ;
+                    String response = new String("") ;
+                    if (inputArray.length == 4){
+                        System.out.println("Please enter the message you want : ");
+                        response = scanner.nextLine();
+                        Functions.commentResponse(commentID,response);
+                    }else {
+                        for (int i = 4 ; i < inputArray.length ; i++){
+                            response += inputArray[i] ;
+                        }
+                        Functions.commentResponse(commentID,response);
+                    }
                 }
                 else {
                     System.out.println("invalid command");

@@ -11,6 +11,7 @@ public class Restaurant {
     public String restaurantID ;
     public String restaurantName ;
     public Admin restaurantOwner ;
+    public String restaurantLocation ;
     public Restaurant(String restaurantName){
         this.restaurantName = restaurantName ;
     }

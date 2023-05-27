@@ -302,27 +302,118 @@ public class Functions {
     }
     public static void deactiveFood(String foodID){
         Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
-        Food food = restaurant.restaurantMenu.get(0) ;
-        boolean foodIDExistance = false ;
-        for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
-            if (foodID.equals(restaurant.restaurantMenu.get(i).foodID)){
-                food = restaurant.restaurantMenu.get(i) ;
-                foodIDExistance = true ;
-            }
-        }
+        boolean foodIDExistance = foodIDExistanceChecker(restaurant,foodID) ;
         if (foodIDExistance){
-            if (food.activeOrder){
-                System.out.println("You can't disactive a food when it has active order!");
+            Food food = foodIDfounder(restaurant,foodID) ;
+            if(food.possibilityOfOrdering){
+                if (food.activeOrder){
+                    System.out.println("You can't deactive a food when it has active order!");
+                }else {
+                    System.out.println("Are you sure you want to deactive this food ?");
+                    String answer = scanner.nextLine() ;
+                    if (answer.toLowerCase().equals("yes")){
+                        food.possibilityOfOrdering = false ;
+                        System.out.println("food deactived successfully!");
+                    }
+                }
             }else {
-                System.out.println("Are you sure you want to disactive this food ?");
+                System.out.println("food has been deactive!");
+            }
+
+        }else {
+            System.out.println("this foodID doesn't exist in this restaurant!");
+        }
+    }
+    public static void activeFood(String foodID){
+        Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+        boolean foodIDExistance = foodIDExistanceChecker(restaurant,foodID) ;
+        if (foodIDExistance){
+            Food food = foodIDfounder(restaurant,foodID) ;
+            if(food.possibilityOfOrdering){
+                System.out.println("food has been active!");
+            }else {
+                System.out.println("Are you sure you want to active this food ?");
                 String answer = scanner.nextLine() ;
                 if (answer.toLowerCase().equals("yes")){
-                    food.possibilityOfOrdering = false ;
-                    System.out.println("food disactived successfully!");
+                    food.possibilityOfOrdering = true ;
+                    System.out.println("food actived successfully!");
                 }
             }
         }else {
             System.out.println("this foodID doesn't exist in this restaurant!");
         }
+    }
+    public static void discountFood(String foodID,int discountPercent,int timestampHour){
+        Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+        boolean foodIDExistance = foodIDExistanceChecker(restaurant,foodID) ;
+        if (foodIDExistance){
+            Food food = foodIDfounder(restaurant,foodID) ;
+            if(food.discountActivation){
+                System.out.println("You can't add another discount to the food when it has an active discount!");
+            }else {
+                if (discountPercent <= 50){
+                    food.discountActivation = true ;
+                    food.discountValue = discountPercent ;
+                    food.discountTimeStampHour = timestampHour ;
+                }else {
+                    System.out.println("You can't a discount with more than half of food cost!");
+                }
+            }
+        }else {
+            System.out.println("this foodID doesn't exist in this restaurant!");
+        }
+    }
+    public static boolean foodIDExistanceChecker(Restaurant restaurant,String foodID){
+        boolean foodIDExistance = false ;
+        for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
+            if (foodID.equals(restaurant.restaurantMenu.get(i).foodID)){
+                foodIDExistance = true ;
+            }
+        }
+        return foodIDExistance ;
+    }
+    public static Food foodIDfounder(Restaurant restaurant,String foodID){
+        Food food = restaurant.restaurantMenu.get(0) ;
+        for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
+            if (foodID.equals(restaurant.restaurantMenu.get(i).foodID)){
+                food = restaurant.restaurantMenu.get(i) ;
+            }
+        }
+        return food ;
+    }
+    public static boolean commentIDExistanceChecker(String commentID){
+        Food food = Food.selectedFood ;
+        boolean commentExistance = false ;
+        for (int i = 0 ; i < food.foodCommentsArrayList.size() ; i++){
+            if (commentID.equals(food.foodCommentsArrayList.get(i).commentID)){
+                commentExistance = true ;
+            }
+        }
+        return commentExistance ;
+    }
+    public static Comment commentFounder(String commentID){
+        Food food = Food.selectedFood ;
+        Comment comment = food.foodCommentsArrayList.get(0) ;
+        for (int i = 0 ; i < food.foodCommentsArrayList.size() ; i++){
+            if (commentID.equals(food.foodCommentsArrayList.get(i).commentID)){
+                comment = food.foodCommentsArrayList.get(i) ;
+            }
+        }
+        return comment ;
+    }
+    public static void commentResponse(String commentID,String response){
+        boolean commentIDExistance = commentIDExistanceChecker(commentID) ;
+        if (commentIDExistance){
+            Comment comment = commentFounder(commentID) ;
+            if (comment.commentResponse.equals("")){
+                comment.commentResponse = response ;
+                System.out.println("your response accepted!");
+            }else {
+                System.out.println("you have responsed to this comment before!");
+            }
+        }else {
+            System.out.println("This commentID doesn't exist in this food!");
+        }
+
     }
 }
