@@ -8,8 +8,9 @@ public class Food {
     public String foodName ;
     public String foodID ;
     public int foodCost ;
-    public boolean orderActivation ;
+    public boolean possibilityOfOrdering ;
     public boolean discountActivation ;
+    public boolean activeOrder ;
     public int discountValue ;
     public int foodOrdered ;
     public int foodRatedNumber ;

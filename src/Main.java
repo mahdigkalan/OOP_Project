@@ -16,15 +16,15 @@ public class Main {
                 break ;
             }else {
                 String[] inputArray = input.split(" ") ;
-                if (inputArray[0].equals("ADD") && ( inputArray[1].equals("USER") || inputArray[1].equals("ADMIN") ) && inputArray.length == 4){
+                if (inputArray[0].equals("ADD") && ( inputArray[1].equals("USER") || inputArray[1].equals("ADMIN") ) && inputArray.length == 4 && !Role.loggedInRoleExistance){
                     if (!inputArray[1].equals("ADMIN") && !inputArray[1].equals("USER")){
                         System.out.println("Choosen Role is Invalid!");
                     }else {
                         Functions.checkPassword(inputArray[3],inputArray[1],inputArray[2]) ;
                     }
-                }else if (inputArray[0].equals("LOGIN") && inputArray.length == 4){
+                }else if (inputArray[0].equals("LOGIN") && inputArray.length == 4 && !Role.loggedInRoleExistance){
                     Functions.LogIn(inputArray[3],inputArray[1],inputArray[2]) ;
-                }else if (input.equals("LOGOUT")){
+                }else if (input.equals("LOGOUT") && Role.loggedInRoleExistance){
                     if (Role.loggedInRoleExistance){
                         Role.loggedInRole = null ;
                         Role.loggedInRoleExistance = false ;
@@ -32,7 +32,7 @@ public class Main {
                     }else {
                         System.out.println("There is no LoggedIn account!");
                     }
-                }else if(inputArray[0].equals("FORGET") &&inputArray[1].equals("PASSWORD") && inputArray.length == 4){
+                }else if(inputArray[0].equals("FORGET") &&inputArray[1].equals("PASSWORD") && inputArray.length == 4 && !Role.loggedInRoleExistance){
                     String Role = inputArray[2] ;
                     String userName = inputArray[3] ;
                     Functions.ForgetPassword(Role,userName);
@@ -44,6 +44,7 @@ public class Main {
                     System.out.println("please enter yout restaurant name : ");
                     String restaurantName = scanner.nextLine() ;
                     Restaurant restaurant = new Restaurant(restaurantName) ;
+                    restaurant.restaurantOwner = admin ;
                     restaurant.restaurantID = Functions.setID("restaurant") ;
                     admin.adminRestaurants.add(restaurant) ;
                     System.out.println("restaurant created successfully!");
@@ -96,6 +97,12 @@ public class Main {
                     foodName = foodName.trim() ;
                     int foodCost = Integer.parseInt(inputArray[inputArray.length-1]) ;
                     Functions.addFood(foodName,foodCost);
+                }else if (inputArray[0].equals("DELETE") && inputArray[1].equals("FOOD") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && inputArray.length == 3){
+                    String foodID = inputArray[2] ;
+                    Functions.deleteFood(foodID);
+                }else if (inputArray[0].equals("DEACTIVE") && inputArray[1].equals("FOOD") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && inputArray.length == 3){
+                    String foodID = inputArray[2] ;
+                    Functions.deactiveFood(foodID);
                 }
                 else {
                     System.out.println("invalid command");

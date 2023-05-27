@@ -272,4 +272,57 @@ public class Functions {
             System.out.println("Restaurant Name : "+restaurant.restaurantName+" , Restaurant ID : "+restaurant.restaurantID) ;
         }
     }
+    public static void deleteFood(String foodID){
+        Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+        boolean foodIDExistance = false , foodExistanceRestaurant = false;
+        int foodIndexFood = 0 , foodIndexRestaurant = 0 ;
+        for (int i = 0 ; i < Food.allFoodsArrayList.size() ; i++){
+            if (Food.allFoodsArrayList.get(i).foodID.equals(foodID)){
+                foodIDExistance = true ;
+                foodIndexFood = i ;
+            }
+        }
+        for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
+            if (restaurant.restaurantMenu.get(i).foodID.equals(foodID)){
+                foodExistanceRestaurant = true ;
+                foodIndexRestaurant = i ;
+            }
+        }
+        if (foodIDExistance){
+            if (foodExistanceRestaurant){
+                Food.allFoodsArrayList.remove(foodIndexFood) ;
+                restaurant.restaurantMenu.remove(foodIndexRestaurant) ;
+                System.out.println("Food deleted successfully!");
+            }else {
+                System.out.println("This food ID does't exist in this Restaurant!");
+            }
+        }else {
+            System.out.println("This food ID does't exist!");
+        }
+    }
+    public static void deactiveFood(String foodID){
+        Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+        Food food = restaurant.restaurantMenu.get(0) ;
+        boolean foodIDExistance = false ;
+        for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
+            if (foodID.equals(restaurant.restaurantMenu.get(i).foodID)){
+                food = restaurant.restaurantMenu.get(i) ;
+                foodIDExistance = true ;
+            }
+        }
+        if (foodIDExistance){
+            if (food.activeOrder){
+                System.out.println("You can't disactive a food when it has active order!");
+            }else {
+                System.out.println("Are you sure you want to disactive this food ?");
+                String answer = scanner.nextLine() ;
+                if (answer.toLowerCase().equals("yes")){
+                    food.possibilityOfOrdering = false ;
+                    System.out.println("food disactived successfully!");
+                }
+            }
+        }else {
+            System.out.println("this foodID doesn't exist in this restaurant!");
+        }
+    }
 }
