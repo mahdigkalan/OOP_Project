@@ -154,7 +154,7 @@ public class Main {
                     if (foodIDExistance) {
                         Food food = Functions.foodIDfounder(restaurant, foodID);
                         Food.selectedFoodForAdmin = food;
-                        System.out.println("the food id of : "+foodID+" added successfully !") ;
+                        System.out.println("the food id of : "+foodID+" selected successfully !") ;
                     } else {
                         System.out.println("this foodID doesn't exist in this restaurant!");
                     }
@@ -198,10 +198,25 @@ public class Main {
                     String parameter = inputArray[3] ;
                     String value = inputArray[4] ;
                     Functions.editOrder(orderID,parameter,value);
-                }else if (inputArray[0].equals("SHOW") && inputArray[1].equals("ORDER") && inputArray[1].equals("HISTORY") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && inputArray.length == 3){
+                }else if (inputArray[0].equals("SHOW") && inputArray[1].equals("ORDER") && inputArray[2].equals("HISTORY") && Role.loggedInRoleExistance && Role.loggedInRole instanceof Admin && Restaurant.loggedInRestaurantForAdmin != null && Food.selectedFoodForAdmin == null && inputArray.length == 3){
                     Functions.showOrderHistory();
-                }
-                else if (inputArray[0].equals("DISPLAY") && inputArray[1].equals("CART") && inputArray[2].equals("STATUS") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User){
+                } else if (input.equals("RETURN") && Role.loggedInRoleExistance) {
+                    if (Role.loggedInRole instanceof Admin){
+                        if (Food.selectedFoodForAdmin != null){
+                            Food.selectedFoodForAdmin = null ;
+                        }else if (Restaurant.loggedInRestaurantForAdmin != null && Food.selectedFoodForAdmin == null){
+                            Restaurant.loggedInRestaurantForAdmin = null ;
+                        }
+                    }else if (Role.loggedInRole instanceof User){
+                        if (Food.selectedFoodForUser != null){
+                            Food.selectedFoodForUser = null ;
+                        }else if (Food.selectedFoodForUser == null && Restaurant.loggedInRestaurantForUser != null){
+                            Restaurant.loggedInRestaurantForUser = null ;
+                        }else if (Order.LoggedInOrder != null){
+                            Order.LoggedInOrder = null ;
+                        }
+                    }
+                } else if (inputArray[0].equals("DISPLAY") && inputArray[1].equals("CART") && inputArray[2].equals("STATUS") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User){
                     Functions.showCartStatus((User) Role.loggedInRole);
                 } else if (inputArray[0].equals("CONFIRM") && inputArray[1].equals("ORDER") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User){
                     String orderID = inputArray[2];
@@ -216,9 +231,9 @@ public class Main {
                 } else if (inputArray[0].equals("SELECT") && inputArray[1].equals("RESTAURANT") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser == null && Food.selectedFoodForUser == null) {
                     String restaurantID = inputArray[1];
                     Functions.selectRestaurant(restaurantID);
-                } else if (inputArray[0].equals("ACCESS") && inputArray[1].equals("ORDER") && inputArray[2].equals("HISTORY") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Food.selectedFoodForUser == null){
+                } else if (inputArray[0].equals("ACCESS") && inputArray[1].equals("ORDER") && inputArray[2].equals("HISTORY") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Food.selectedFoodForUser == null && Restaurant.loggedInRestaurantForUser == null){
                     Functions.showOrdersHistory((User) Role.loggedInRole);
-                } else if (inputArray[0].equals("SELECT") && inputArray[1].equals("ORDER") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser == null){
+                } else if (inputArray[0].equals("SELECT") && inputArray[1].equals("ORDER") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser == null && Food.selectedFoodForUser == null){
                     Functions.selectOrder(inputArray[2]);
                 } else if (inputArray[0].equals("SEARCH") && inputArray[1].equals("FOOD") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser == null) {
                     String foodName = inputArray[1];
