@@ -1,6 +1,7 @@
 package Functions;
 import Classes.*;
 
+import java.util.EventListener;
 import java.util.Scanner;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -197,8 +198,12 @@ public class Functions {
     }
     public static void showFoodType(){
         Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
-        for (int i = 0 ; i < restaurant.restaurantFoodType.size() ; i++){
-            System.out.println( (i+1) +". "+restaurant.restaurantFoodType.get(i));
+        if (restaurant.restaurantFoodType.size() == 0){
+           System.out.println("no food type added yet !");
+        }else {
+            for (int i = 0 ; i < restaurant.restaurantFoodType.size() ; i++){
+                System.out.println( (i+1) +". "+restaurant.restaurantFoodType.get(i));
+            }
         }
     }
     public static String setID(String thingString){
@@ -251,30 +256,49 @@ public class Functions {
         }
         if (changingParameters.equals("NAME")){
             food.foodName = newValue ;
+            System.out.println("new name sat for food with id of : "+foodID);
         }else if (changingParameters.equals("PRICE")){
             food.foodCost = Integer.parseInt(newValue) ;
+            System.out.println("new price sat for food with id of : "+foodID);
         }else if (changingParameters.equals("DISCOUNT")){
             if (food.discountActivation){
                 food.discountActivation = false ;
             }else {
-                int discount = scanner.nextInt() ;
                 food.discountActivation = true ;
-                food.discountValue = discount ;
+                if (Integer.parseInt(newValue) <= 50 && Integer.parseInt(newValue) > 0){
+                    food.discountValue = Integer.parseInt(newValue) ;
+                }else {
+                    System.out.println("discount value must be less than 50 percent and positive !");
+                }
             }
         }
     }
     public static void addFood(String foodName,int foodCost){
         Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
-        Food food = new Food(foodName,foodCost) ;
-        food.foodID = setID("food") ;
-        restaurant.restaurantMenu.add(food) ;
-        Food.allFoodsArrayList.add(food) ;
-        System.out.println("food added to menu successfully!");
+        boolean foodExistance = false ;
+        for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
+            if (foodName.equals(restaurant.restaurantMenu.get(i).foodName)){
+                foodExistance = true ;
+            }
+        }
+        if (foodExistance){
+            System.out.println("sorry a food exist with this name in the menu ! ");
+        }else {
+            Food food = new Food(foodName,foodCost) ;
+            food.foodID = setID("food") ;
+            restaurant.restaurantMenu.add(food) ;
+            Food.allFoodsArrayList.add(food) ;
+            System.out.println("food added to menu successfully!");
+        }
     }
     public static void showRestaurantList(Admin admin){
-        for (int i = 0 ; i < admin.adminRestaurants.size() ; i++){
-            Restaurant restaurant = admin.adminRestaurants.get(i) ;
-            System.out.println("Restaurant Name : "+restaurant.restaurantName+" , Restaurant ID : "+restaurant.restaurantID) ;
+        if (admin.adminRestaurants.size() == 0){
+            System.out.println("there is no restaurant in the list!");
+        }else {
+            for (int i = 0 ; i < admin.adminRestaurants.size() ; i++){
+                Restaurant restaurant = admin.adminRestaurants.get(i) ;
+                System.out.println("Restaurant Name : "+restaurant.restaurantName+" , Restaurant ID : "+restaurant.restaurantID) ;
+            }
         }
     }
     public static void deleteFood(String foodID){
@@ -337,7 +361,7 @@ public class Functions {
             if(food.possibilityOfOrdering){
                 System.out.println("food has been active!");
             }else {
-                System.out.println("Are you sure you want to active this food ?");
+                System.out.println("Are you sure you want to active this food ? (yes or no) ");
                 String answer = scanner.nextLine() ;
                 if (answer.toLowerCase().equals("yes")){
                     food.possibilityOfOrdering = true ;
@@ -360,6 +384,7 @@ public class Functions {
                     food.discountActivation = true ;
                     food.discountValue = discountPercent ;
                     food.discountTimeStampHour = timestampHour ;
+                    System.out.println("discount for food with id of : "+foodID+" actived.");
                 }else {
                     System.out.println("You can't a discount with more than half of food cost!");
                 }
@@ -418,6 +443,67 @@ public class Functions {
             }
         }else {
             System.out.println("This commentID doesn't exist in this food!");
+        }
+    }
+    public static void displayOpenOrders(){
+        Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+        if (restaurant.restaurantOrders.size()==0){
+            System.out.println("there is no order !");
+        }else {
+            for (int i = 0 ; i < restaurant.restaurantOrders.size() ; i++){
+                Order order = restaurant.restaurantOrders.get(i) ;
+                System.out.print((i+1)+". ") ;
+                for (int j = 0 ; j < order.orderFoods.size() ; j++){
+                    System.out.println("  "+order.orderFoods.get(j).foodName+" * "+order.orderFoods.get(j).foodID);
+                }
+            }
+        }
+    }
+    public static void editOrder(String orderID,String parameter,String value){
+        Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+        Order order = restaurant.restaurantOrders.get(0) ;
+        boolean orderIDExistance = false ;
+        for (int i = 0 ; i < restaurant.restaurantOrders.size() ; i++){
+            if (orderID.equals(restaurant.restaurantOrders.get(i).orderID)){
+                order = restaurant.restaurantOrders.get(i) ;
+                orderIDExistance = true ;
+            }
+        }
+        if (orderIDExistance){
+            if (parameter.equals("STATUS")){
+                if (value.equals("COOKING")){
+                    order.orderStatus = STATUS.COOKING ;
+                }else if (value.equals("SENT")){
+                    order.orderStatus = STATUS.SENT ;
+                }else if (value.equals("DELIVERED")){
+                    order.orderStatus = STATUS.DELIVERED ;
+                }else {
+                    System.out.println("entered status is not valid!") ;
+                }
+            }else if (parameter.equals("TIME")){
+                int time = Integer.parseInt(value) ;
+                if (time > 0){
+                    order.deliveryTimeRemains = time ;
+                }else {
+                    System.out.println("entered time is not valid !");
+                }
+            }
+        }else {
+            System.out.println("This id doesn't exist!");
+        }
+    }
+    public static void showOrderHistory(){
+        Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
+        if (restaurant.restaurantOrdersHistory.size() == 0){
+            System.out.println("there is no order in the history !");
+        }else {
+            for (int i = 0 ; i < restaurant.restaurantOrdersHistory.size() ; i++){
+                Order order = restaurant.restaurantOrdersHistory.get(i) ;
+                System.out.print((i+1)+". ") ;
+                for (int j = 0 ; j < order.orderFoods.size() ; j++){
+                    System.out.println("  "+order.orderFoods.get(j).foodName+" * "+order.orderFoods.get(j).foodID);
+                }
+            }
         }
     }
     public static void showAllAvailableRestaurants(){
@@ -660,9 +746,11 @@ public class Functions {
                 k = i;
         if (k != -1 && user.userCart.cartorders.get(k).getOrderCost() <= user.getAccountCharge()){
             user.userOrders.add(user.userCart.cartorders.get(k));
-            user.setAccountCharge(user.getAccountCharge() - user.userCart.cartorders.get(k).getOrderCost());
-            user.userCart.cartorders.get(k).orderedRestaurant.restaurantOrdersHistory.add(user.userCart.cartorders.get(k));
-            user.userCart.cartorders.remove(k);
+            user.setAccountCharge(user.getAccountCharge() - user.userCart.cartorders.get(k).getOrderCost()) ;
+            user.userCart.cartorders.get(k).orderedRestaurant.restaurantOrders.add(user.userCart.cartorders.get(k)) ;
+            user.userCart.cartorders.get(k).orderStatus = STATUS.COOKING ;
+            user.userCart.cartorders.remove(k) ;
+
             System.out.println("Order successfully confirmed");
         } else if (k != -1 && user.userCart.cartorders.get(k).getOrderCost() > user.getAccountCharge()){
             System.out.println("Please charge your account first !!!");

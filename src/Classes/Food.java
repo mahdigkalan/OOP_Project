@@ -13,7 +13,7 @@ public class Food {
     public String foodName ;
     public String foodID ;
     public double foodCost ;
-    public boolean possibilityOfOrdering ;
+    public boolean possibilityOfOrdering = true ;
     public boolean discountActivation ;
     public boolean activeOrder ;
     public int discountValue ;
