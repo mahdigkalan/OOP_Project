@@ -66,7 +66,7 @@ public class Functions {
     public static void LogIn(String password,String Role,String userName){
         if (Role.equals("ADMIN")){
             if (isUserNameUnique(userName,Role)){
-               System.out.println("This username does not exist!");
+                System.out.println("This username does not exist!");
             }else {
                 Admin admin = Admin.adminArrayList.get(findRoleIndex(userName,Role)) ;
                 if (admin.getPassword().equals(password)){
@@ -91,6 +91,7 @@ public class Functions {
                     Classes.Role.loggedInRole = user ;
                     Classes.Role.loggedInRoleExistance = true ;
                     System.out.println("you are logged in as USER!");
+                    Functions.showAllAvailableRestaurants();
                 }else {
                     System.out.println("password is incorrect!");
                 }
@@ -219,20 +220,24 @@ public class Functions {
             counter = Comment.counterIDComment ;
         }else if (thingString.equals("order")){
             firstchapter = new String("O") ;
-            Order.countrIDOrder++ ;
-            counter = Order.countrIDOrder ;
+            Order.counterIDOrder++ ;
+            counter = Order.counterIDOrder ;
+        }else if (thingString.equals("rating")){
+            firstchapter = new String("RA") ;
+            Rating.counterIDRating++ ;
+            counter = Rating.counterIDRating ;
         }
         ID = firstchapter + randomNumber + counter ;
         return ID ;
     }
-    public static void showMenu(){
+    public static void showMenuForAdmin(){
         Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
         if (restaurant.restaurantMenu.size() == 0){
             System.out.println("No food added to the menu yet!");
         }else {
             for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
                 Food food = restaurant.restaurantMenu.get(i) ;
-                System.out.println("food name : "+food.foodName+" * food id : "+food.foodID+" * food cost : "+food.foodCost+" * active discount : "+food.discountActivation+" * food rate : "+food.foodRate);
+                System.out.println("food name : "+food.foodName+" * food id : "+food.foodID+" * food cost : "+food.foodCost+" * active discount : "+food.discountActivation+" * food rate : "+food.getRating());
             }
         }
     }
@@ -382,7 +387,7 @@ public class Functions {
         return food ;
     }
     public static boolean commentIDExistanceChecker(String commentID){
-        Food food = Food.selectedFood ;
+        Food food = Food.selectedFoodForAdmin ;
         boolean commentExistance = false ;
         for (int i = 0 ; i < food.foodCommentsArrayList.size() ; i++){
             if (commentID.equals(food.foodCommentsArrayList.get(i).commentID)){
@@ -392,7 +397,7 @@ public class Functions {
         return commentExistance ;
     }
     public static Comment commentFounder(String commentID){
-        Food food = Food.selectedFood ;
+        Food food = Food.selectedFoodForAdmin ;
         Comment comment = food.foodCommentsArrayList.get(0) ;
         for (int i = 0 ; i < food.foodCommentsArrayList.size() ; i++){
             if (commentID.equals(food.foodCommentsArrayList.get(i).commentID)){
@@ -414,6 +419,268 @@ public class Functions {
         }else {
             System.out.println("This commentID doesn't exist in this food!");
         }
+    }
+    public static void showAllAvailableRestaurants(){
+        if (Restaurant.allRestaurantsArrayList.size() == 0)
+            System.out.println("Sorry, There is no available restaurant at this time !!!");
+        else {
+            System.out.println("Here is the list of available restaurants for you:");
+            for (int i = 0; i < Restaurant.allRestaurantsArrayList.size(); i++)
+                System.out.println("Restaurant \"" + Restaurant.allRestaurantsArrayList.get(i).restaurantName + "\" -> with the ID \"" + Restaurant.allRestaurantsArrayList.get(i).restaurantID + "\"");
+        }
+    }
+    public static void ShowRelatedRestaurants (String name){
+        boolean found = false;
+        for (int i = 0; i < Restaurant.allRestaurantsArrayList.size(); i++)
+            if (Restaurant.allRestaurantsArrayList.get(i).restaurantName.indexOf(name) != -1)
+                found = true;
+        if (found) {
+            System.out.println("Related restaurants with the name \"" + name + "\":");
+            for (int i = 0; i < Restaurant.allRestaurantsArrayList.size(); i++)
+                if (Restaurant.allRestaurantsArrayList.get(i).restaurantName.indexOf(name) != -1)
+                    System.out.println("Restaurant \"" + Restaurant.allRestaurantsArrayList.get(i).restaurantName + "\" -> with the ID \"" + Restaurant.allRestaurantsArrayList.get(i).restaurantID + "\" found!");
+        } else
+            System.out.println("There is no related restaurant with this name !!!");
+    }
+    public static void selectRestaurant (String restaurantID){
+        int k = -1;
+        for (int i = 0; i < Restaurant.allRestaurantsArrayList.size(); i++)
+            if (Restaurant.allRestaurantsArrayList.get(i).restaurantID.equals(restaurantID))
+                k = i;
+        if (k != -1) {
+            Restaurant.loggedInRestaurantForUser = Restaurant.allRestaurantsArrayList.get(k);
+            System.out.println("Restaurant with the ID \"" + restaurantID + "\" selected!");
+            showMenuForUser(Restaurant.loggedInRestaurantForUser);
+        }
+        else
+            System.out.println("There is no related restaurant with this ID !!!");
 
+    }
+    public static void showMenuForUser(Restaurant restaurant){
+        if (restaurant.restaurantMenu.size() == 0)
+            System.out.println("Sorry, There is no available food for you at this time !!!");
+        else {
+            System.out.println("Here is the list of foods at this restaurant:");
+            for (int i = 0; i < restaurant.restaurantMenu.size(); i++)
+                System.out.println("Food \"" + restaurant.restaurantMenu.get(i).foodName + "\" with the ID \"" + restaurant.restaurantMenu.get(i).foodID + "\" and the price \"" + restaurant.restaurantMenu.get(i).foodCost + "\"");
+        }
+    }
+    public static void ShowRelatedFoods (String name){
+        boolean found = false;
+        for (int i = 0; i < Restaurant.loggedInRestaurantForUser.restaurantMenu.size(); i++)
+            if (Restaurant.loggedInRestaurantForUser.restaurantMenu.get(i).foodName.indexOf(name) != -1)
+                found = true;
+        if (found) {
+            System.out.println("Related foods with the name \"" + name + "\":");
+            for (int i = 0; i < Restaurant.loggedInRestaurantForUser.restaurantMenu.size(); i++)
+                if (Restaurant.loggedInRestaurantForUser.restaurantMenu.get(i).foodName.indexOf(name) != -1)
+                    System.out.println("Food \"" + Restaurant.loggedInRestaurantForUser.restaurantMenu.get(i).foodName + "\" -> with the ID \"" + Restaurant.loggedInRestaurantForUser.restaurantMenu.get(i).foodID + "\" found!");
+        } else
+            System.out.println("There is no related food with this name !!!");
+    }
+    public static void selectFood (String foodID){
+        int k = -1;
+        for (int i = 0; i < Restaurant.loggedInRestaurantForUser.restaurantMenu.size(); i++)
+            if (Restaurant.loggedInRestaurantForUser.restaurantMenu.get(i).foodID.equals(foodID))
+                k = i;
+        if (k != -1) {
+            Food.selectedFoodForUser = Restaurant.loggedInRestaurantForUser.restaurantMenu.get(k);
+            System.out.println("Food with the ID \"" + foodID + "\" selected!");
+        }
+        else
+            System.out.println("There is no related food with this ID !!!");
+    }
+    public static void showRestaurantComments (Restaurant restaurant){
+        if (restaurant.restaurantCommentsArrayList.size() == 0)
+            System.out.println("There is no comments about this restaurant!");
+        else {
+            System.out.println("Comments:");
+            for (int i = 0; i < restaurant.restaurantCommentsArrayList.size(); i++)
+                System.out.println("\"" + restaurant.restaurantCommentsArrayList.get(i).commentedUser.getUserName() + "\" says: " + restaurant.restaurantCommentsArrayList.get(i).comment + " about this restaurant.");
+        }
+    }
+    public static void getRestaurantComment(Restaurant restaurant){
+        System.out.print("Please enter your comment about this restaurant \"" + restaurant.restaurantName + "\": ");
+        String comment = scanner.nextLine();
+        restaurant.restaurantCommentsArrayList.add(new Comment());
+        restaurant.restaurantCommentsArrayList.get(restaurant.restaurantCommentsArrayList.size()-1).comment = comment;
+        restaurant.restaurantCommentsArrayList.get(restaurant.restaurantCommentsArrayList.size()-1).commentID = setID("comment");
+        restaurant.restaurantCommentsArrayList.get(restaurant.restaurantCommentsArrayList.size()-1).commentedUser = (User) Role.loggedInRole;
+        System.out.println("Thanks for your oponion :)");
+    }
+    public static void editRestaurantComment(String commentID){
+        int k = -1;
+        for (int i = 0; i < Restaurant.loggedInRestaurantForUser.restaurantCommentsArrayList.size(); i++)
+            if (Restaurant.loggedInRestaurantForUser.restaurantCommentsArrayList.get(i).commentID == commentID)
+                k = i;
+        if (k == -1)
+            System.out.println("Sorry, There is no comment with this ID !!!");
+        else if (k != -1 && !Role.loggedInRole.equals(Restaurant.loggedInRestaurantForUser.restaurantCommentsArrayList.get(k).commentedUser))
+            System.out.println("Sorry, You can't edit this comment because it's Not yours !!!");
+        else {
+            System.out.print("Please enter your new comment: ");
+            String newComment = scanner.nextLine();
+            Restaurant.loggedInRestaurantForUser.restaurantCommentsArrayList.get(k).comment = newComment;
+            System.out.println("Thanks");
+        }
+    }
+    public static void getRestaurantRating (){
+        System.out.print("Please enter your rating to this restaurant: (0 to 5)");
+        double rating  = scanner.nextDouble();
+        if (rating >= 0 && rating <= 5){
+            System.out.println("Thanks for your rating :)");
+            Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.add(new Rating());
+            Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).rating = rating;
+            Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).ratingID = setID("rating");
+            Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).ratedUser = (User) Role.loggedInRole;
+        } else
+            System.out.println("Sorry, You should rate from 0 to 5 !!!");
+    }
+    public static void editRestaurantRating(String ratingID){
+        int k = -1;
+        for (int i = 0; i < Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size(); i++)
+            if (Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(i).ratingID == ratingID)
+                k = i;
+        if (k == -1)
+            System.out.println("Sorry, There is no rating with this ID !!!");
+        else if (k != -1 && !Role.loggedInRole.equals(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(k).ratedUser))
+            System.out.println("Sorry, You can't edit this rating because it's Not yours !!!");
+        else {
+            System.out.print("Please enter your new rating: ");
+            double newRating = scanner.nextDouble();
+            Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(k).rating = newRating;
+            System.out.println("Thanks");
+        }
+    }
+    public static void getFoodComment(Food food){
+        System.out.print("Please enter your comment about this food \"" + food.foodName + "\": ");
+        String comment = scanner.nextLine();
+        food.foodCommentsArrayList.add(new Comment());
+        food.foodCommentsArrayList.get(food.foodCommentsArrayList.size()-1).comment = comment;
+        food.foodCommentsArrayList.get(food.foodCommentsArrayList.size()-1).commentID = setID("comment");
+        food.foodCommentsArrayList.get(food.foodCommentsArrayList.size()-1).commentedUser = (User) Role.loggedInRole;
+        System.out.println("Thanks for your oponion :)");
+    }
+    public static void editFoodComment(String commentID){
+        int k = -1;
+        for (int i = 0; i < Food.selectedFoodForUser.foodCommentsArrayList.size(); i++)
+            if (Food.selectedFoodForUser.foodCommentsArrayList.get(i).commentID == commentID)
+                k = i;
+        if (k == -1)
+            System.out.println("Sorry, There is no comment with this ID !!!");
+        else if (k != -1 && !Role.loggedInRole.equals(Food.selectedFoodForUser.foodCommentsArrayList.get(k).commentedUser))
+            System.out.println("Sorry, You can't edit this comment because it's Not yours !!!");
+        else {
+            System.out.print("Please enter your new comment: ");
+            String newComment = scanner.nextLine();
+            Food.selectedFoodForUser.foodCommentsArrayList.get(k).comment = newComment;
+            System.out.println("Thanks");
+        }
+    }
+    public static void getFoodRating (){
+        System.out.print("Please enter your rating to this food: (0 to 5)");
+        double rating  = scanner.nextDouble();
+        if (rating >= 0 && rating <= 5){
+            System.out.println("Thanks for your rating :)");
+            Food.selectedFoodForUser.foodRatingsArrayList.add(new Rating());
+            Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).rating = rating;
+            Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).ratingID = setID("rating");
+            Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).ratedUser = (User) Role.loggedInRole;
+        } else
+            System.out.println("Sorry, You should rate from 0 to 5 !!!");
+    }
+    public static void editFoodRating(String ratingID){
+        int k = -1;
+        for (int i = 0; i < Food.selectedFoodForUser.foodRatingsArrayList.size(); i++)
+            if (Food.selectedFoodForUser.foodRatingsArrayList.get(i).ratingID == ratingID)
+                k = i;
+        if (k == -1)
+            System.out.println("Sorry, There is no rating with this ID !!!");
+        else if (k != -1 && !Role.loggedInRole.equals(Food.selectedFoodForUser.foodRatingsArrayList.get(k).ratedUser))
+            System.out.println("Sorry, You can't edit this rating because it's Not yours !!!");
+        else {
+            System.out.print("Please enter your new rating: ");
+            double newRating = scanner.nextDouble();
+            Food.selectedFoodForUser.foodRatingsArrayList.get(k).rating = newRating;
+            System.out.println("Thanks");
+        }
+    }
+    public static void showFoodComments (Food food){
+        if (Food.selectedFoodForUser.foodCommentsArrayList.size() == 0)
+            System.out.println("There is no comments about this food!");
+        else {
+            System.out.println("Comments:");
+            for (int i = 0; i < Food.selectedFoodForUser.foodCommentsArrayList.size(); i++)
+                System.out.println("\"" + Food.selectedFoodForUser.foodCommentsArrayList.get(i).commentedUser.getUserName() + "\" says: \"" + Food.selectedFoodForUser.foodCommentsArrayList.get(i).comment + "\" about this food.");
+        }
+    }
+    public static void showOrdersHistory(User user){
+        System.out.println("Orders history for you:");
+        for (int i = 0; i < user.userOrders.size(); i++){
+            System.out.print((i+1) + "- You ordered ");
+            for (int j=0;j<user.userOrders.get(i).orderFoods.size();j++)
+                System.out.print("\"" + user.userOrders.get(i).orderFoods.get(j).foodName + "\" ");
+            System.out.println();
+        }
+    }
+    public static void selectOrder(String orderID){
+        int k = -1;
+        for (int i = 0; i < ((User)Role.loggedInRole).userCart.cartorders.size(); i++)
+            if (((User)Role.loggedInRole).userCart.cartorders.get(i).orderID.equals(orderID))
+                k = i;
+        if (k != -1 ) {
+            System.out.println("Order with the ID \"" + orderID + "\" selected!");
+            int orderSize = ((User) Role.loggedInRole).userCart.cartorders.get(k).orderFoods.size();
+            if (orderSize != 0) {
+                double totalCost = 0;
+                System.out.println("Your order contains this foods:");
+                for (int i = 0; i < orderSize; i++) {
+                    System.out.print("Food \"" + ((User) Role.loggedInRole).userCart.cartorders.get(k).orderFoods.get(i).foodName + "\" ");
+                    System.out.print("with the ID \"" + ((User) Role.loggedInRole).userCart.cartorders.get(k).orderFoods.get(i).foodID + "\" ");
+                    System.out.println("with the price \"" + ((User) Role.loggedInRole).userCart.cartorders.get(k).orderFoods.get(i).foodCost + "\"");
+                    totalCost += ((User) Role.loggedInRole).userCart.cartorders.get(k).orderFoods.get(i).foodCost;
+                }
+                System.out.println("Total money that you should pay is \"" + totalCost + "\"");
+            } else
+                System.out.println("You add no foods in this Order!");
+        } else
+            System.out.println("There is no Order with this ID !!!");
+    }
+    public static void showCartStatus(User user){
+        for (int i=0;i<user.userCart.cartorders.size();i++){
+            System.out.print("From the restaurant \"" + user.userCart.cartorders.get(i).orderedRestaurant.restaurantName + "\" ");
+            System.out.print("with the total cost \"" + user.userCart.cartorders.get(i).getOrderCost() + "\" ");
+            System.out.println("and the ID \"" + user.userCart.cartorders.get(i).orderID + "\".");
+        }
+    }
+    public static void confirmOrder(User user, String orderID){
+        int k = -1;
+        for (int i = 0; i < user.userCart.cartorders.size(); i++)
+            if (user.userCart.cartorders.get(i).orderID.equals(orderID))
+                k = i;
+        if (k != -1 && user.userCart.cartorders.get(k).getOrderCost() <= user.getAccountCharge()){
+            user.userOrders.add(user.userCart.cartorders.get(k));
+            user.setAccountCharge(user.getAccountCharge() - user.userCart.cartorders.get(k).getOrderCost());
+            user.userCart.cartorders.get(k).orderedRestaurant.restaurantOrdersHistory.add(user.userCart.cartorders.get(k));
+            user.userCart.cartorders.remove(k);
+            System.out.println("Order successfully confirmed");
+        } else if (k != -1 && user.userCart.cartorders.get(k).getOrderCost() > user.getAccountCharge()){
+            System.out.println("Please charge your account first !!!");
+        }
+        else
+            System.out.println("There is no order with this ID !!!");
+    }
+    public static void chargeAccount(User user) {
+        System.out.print("How much would you want to charge? ");
+        double newCharge = scanner.nextDouble();
+        if (newCharge >= 0) {
+            System.out.println("Account charged successfully :)");
+            user.setAccountCharge(newCharge);
+        }
+        else
+            System.out.println("Sorry, you should enter a positive value !!!");
+    }
+    public static void showAccountCharge(User user){
+        System.out.println("You have \"" + user.getAccountCharge() + "\"$ in your account :)");
     }
 }
