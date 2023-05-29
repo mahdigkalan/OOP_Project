@@ -18,7 +18,6 @@ public class Food {
     public boolean activeOrder ;
     public int discountValue ;
     public int discountTimeStampHour ;
-    public int foodOrdered ;
     public int foodRatedNumber ;
 
 

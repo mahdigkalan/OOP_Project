@@ -6,7 +6,7 @@ public class User extends Role {
     public static ArrayList<User> userArrayList = new ArrayList<User>();
     public ArrayList<Order> userOrders = new ArrayList<Order>();
     public Cart userCart = new Cart();
-    private String userName;
+    private String userName ;
     private String password;
     private double accountCharge = 0;
 

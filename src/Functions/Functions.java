@@ -799,7 +799,6 @@ public class Functions {
             user.userCart.cartorders.get(k).orderedRestaurant.restaurantOrders.add(user.userCart.cartorders.get(k)) ;
             user.userCart.cartorders.get(k).orderStatus = STATUS.COOKING ;
             user.userCart.cartorders.remove(k) ;
-
             System.out.println("Order successfully confirmed");
         } else if (k != -1 && user.userCart.cartorders.get(k).getOrderCost() > user.getAccountCharge()){
             System.out.println("Please charge your account first !!!");

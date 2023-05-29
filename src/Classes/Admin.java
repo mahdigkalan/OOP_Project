@@ -8,6 +8,7 @@ public class Admin extends Role {
     public ArrayList<Restaurant> alphabeticSortOfAdminRestaurants = new ArrayList<Restaurant>() ;
     private String userName ;
     private String password ;
+    public String adminID ;
 
     public Admin(String userName,String password){
         this.userName = userName ;
