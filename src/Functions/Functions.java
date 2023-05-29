@@ -61,6 +61,15 @@ public class Functions {
                 }else {
                     System.out.println("A User exist with this username!");
                 }
+            }else if (Role.equals("DELIVERY")){
+                if (isUserNameUnique(userName,Role)){
+                    Delivery delivery = new Delivery(userName,password) ;
+                    Delivery.deliveriesArraylist.add(delivery) ;
+                    System.out.println("Account created successfully");
+                    makeSecurityQuestion(delivery);
+                }else {
+                    System.out.println("A Delivery exist with this username!");
+                }
             }
         }
     }
@@ -97,6 +106,19 @@ public class Functions {
                     System.out.println("password is incorrect!");
                 }
             }
+        }else if (Role.equals("DELIVERY")){
+            if (isUserNameUnique(userName,Role)){
+                System.out.println("This username does not exist!");
+            }else {
+                Delivery delivery = Delivery.deliveriesArraylist.get(findRoleIndex(userName,Role)) ;
+                if (delivery.getPassword().equals(password)){
+                    Classes.Role.loggedInRole = delivery ;
+                    Classes.Role.loggedInRoleExistance = true ;
+                    System.out.println("you are logged in as DELIVERY!");
+                }else {
+                    System.out.println("password is incorrect!");
+                }
+            }
         }
     }
     public static boolean isUserNameUnique(String UserName,String Role){
@@ -110,6 +132,12 @@ public class Functions {
         }else if (Role.equals("USER")){
             for (int i = 0 ; i < User.userArrayList.size() ; i++){
                 if (User.userArrayList.get(i).getUserName().equals(UserName)){
+                    isUserNameUnique = false ;
+                }
+            }
+        }else if (Role.equals("DELIVERY")){
+            for (int i = 0 ; i < Delivery.deliveriesArraylist.size() ; i++){
+                if (Delivery.deliveriesArraylist.get(i).getUserName().equals(UserName)){
                     isUserNameUnique = false ;
                 }
             }
@@ -127,6 +155,12 @@ public class Functions {
         }else if (Role.equals("USER")){
             for (int i = 0 ; i < User.userArrayList.size() ; i++){
                 if (User.userArrayList.get(i).getUserName().equals(userName)){
+                    index = i ;
+                }
+            }
+        }else if (Role.equals("DELIVERY")){
+            for (int i = 0 ; i < Delivery.deliveriesArraylist.size() ; i++){
+                if (Delivery.deliveriesArraylist.get(i).getUserName().equals(userName)){
                     index = i ;
                 }
             }
@@ -231,6 +265,10 @@ public class Functions {
             firstchapter = new String("RA") ;
             Rating.counterIDRating++ ;
             counter = Rating.counterIDRating ;
+        }else if (thingString.equals("delivery")){
+            firstchapter = new String("D") ;
+            Delivery.counterIDDelivery++ ;
+            counter = Delivery.counterIDDelivery ;
         }
         ID = firstchapter + randomNumber + counter ;
         return ID ;
@@ -475,8 +513,19 @@ public class Functions {
                     order.orderStatus = STATUS.COOKING ;
                 }else if (value.equals("SENT")){
                     order.orderStatus = STATUS.SENT ;
+                    int orderIndex = 0 ;
+                    for (int i = 0 ; i < restaurant.restaurantOrders.size() ; i++){
+                        if (orderID.equals(restaurant.restaurantOrders.get(i).orderID)){
+                            orderIndex = i ;
+                        }
+                    }
+                    restaurant.restaurantOrdersHistory.add(order) ;
+                    restaurant.restaurantOrders.remove(orderIndex) ;
                 }else if (value.equals("DELIVERED")){
                     order.orderStatus = STATUS.DELIVERED ;
+                }else if (value.equals("READYFORSENDING")){
+                    order.orderStatus = STATUS.READYFORSENDING ;
+                    findDelivery();
                 }else {
                     System.out.println("entered status is not valid!") ;
                 }
@@ -770,5 +819,8 @@ public class Functions {
     }
     public static void showAccountCharge(User user){
         System.out.println("You have \"" + user.getAccountCharge() + "\"$ in your account :)");
+    }
+    public static void findDelivery(){
+
     }
 }

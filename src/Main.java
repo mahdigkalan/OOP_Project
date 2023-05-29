@@ -14,8 +14,8 @@ public class Main {
                 break;
             } else {
                 String[] inputArray = input.split(" ") ;
-                if (inputArray[0].equals("ADD") && (inputArray[1].equals("USER") || inputArray[1].equals("ADMIN")) && inputArray.length == 4 && !Role.loggedInRoleExistance) {
-                    if (!inputArray[1].equals("ADMIN") && !inputArray[1].equals("USER")) {
+                if (inputArray[0].equals("ADD") && (inputArray[1].equals("USER") || inputArray[1].equals("ADMIN") || inputArray[1].equals("DELIVERY")) && inputArray.length == 4 && !Role.loggedInRoleExistance) {
+                    if (!inputArray[1].equals("ADMIN") && !inputArray[1].equals("USER") && !inputArray[1].equals("DELIVERY")) {
                         System.out.println("Choosen Role is Invalid!");
                     } else {
                         Functions.checkPassword(inputArray[3], inputArray[1], inputArray[2]);

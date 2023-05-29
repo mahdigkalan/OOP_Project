@@ -8,6 +8,7 @@ public class Order {
     public ArrayList<Food> orderFoods = new ArrayList<Food>();
     public String orderID;
     public Restaurant orderedRestaurant;
+    public Delivery deliveryOfOrder ;
     public STATUS orderStatus ;
     public double orderCost ;
     public int deliveryTimeRemains;
