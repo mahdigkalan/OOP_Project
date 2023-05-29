@@ -9,9 +9,11 @@ public class Delivery extends Role {
     public Order activeOrder ;
     private String userName;
     private String password;
-    public Delivery(String userName,String password){
+    public String deliveryID ;
+    public Delivery(String userName,String password,String deliveryID){
         this.userName = userName ;
         this.password = password ;
+        this.deliveryID = deliveryID ;
     }
 
     public String getUserName() {

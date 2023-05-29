@@ -8,11 +8,13 @@ public class User extends Role {
     public Cart userCart = new Cart();
     private String userName ;
     private String password;
+    public String userID ;
     private double accountCharge = 0;
-
-    public User(String userName, String password) {
+    public static int counterIDUser ;
+    public User(String userName, String password,String userID) {
         this.userName = userName;
         this.password = password;
+        this.userID = userID ;
     }
 
     public String getUserName() {

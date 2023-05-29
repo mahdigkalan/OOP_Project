@@ -45,7 +45,7 @@ public class Functions {
         if (numberic && capitalLetter && smallLetter && passwordLength >= 8){
             if (Role.equals("ADMIN")){
                 if (isUserNameUnique(userName,Role)){
-                    Admin admin = new Admin(userName,password) ;
+                    Admin admin = new Admin(userName,password,setID("admin")) ;
                     Admin.adminArrayList.add(admin) ;
                     System.out.println("Account created successfully");
                     makeSecurityQuestion(admin);
@@ -54,7 +54,7 @@ public class Functions {
                 }
             }else if (Role.equals("USER")){
                 if (isUserNameUnique(userName,Role)){
-                    User user = new User(userName,password) ;
+                    User user = new User(userName,password,setID("user")) ;
                     User.userArrayList.add(user) ;
                     System.out.println("Account created successfully");
                     makeSecurityQuestion(user);
@@ -63,7 +63,7 @@ public class Functions {
                 }
             }else if (Role.equals("DELIVERY")){
                 if (isUserNameUnique(userName,Role)){
-                    Delivery delivery = new Delivery(userName,password) ;
+                    Delivery delivery = new Delivery(userName,password,setID("delivery")) ;
                     Delivery.deliveriesArraylist.add(delivery) ;
                     System.out.println("Account created successfully");
                     makeSecurityQuestion(delivery);
@@ -269,6 +269,14 @@ public class Functions {
             firstchapter = new String("D") ;
             Delivery.counterIDDelivery++ ;
             counter = Delivery.counterIDDelivery ;
+        }else if (thingString.equals("admin")){
+            firstchapter = new String("A") ;
+            Admin.counterIDAdmin++ ;
+            counter = Admin.counterIDAdmin ;
+        }else if (thingString.equals("user")){
+            firstchapter = new String("U") ;
+            User.counterIDUser++ ;
+            counter = User.counterIDUser ;
         }
         ID = firstchapter + randomNumber + counter ;
         return ID ;

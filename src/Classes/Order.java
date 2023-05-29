@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Order {
     public static int counterIDOrder;
-    public static Order LoggedInOrder;
     public ArrayList<Food> orderFoods = new ArrayList<Food>();
     public String orderID;
     public Restaurant orderedRestaurant;

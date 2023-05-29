@@ -213,8 +213,6 @@ public class Main {
                             Food.selectedFoodForUser = null ;
                         }else if (Food.selectedFoodForUser == null && Restaurant.loggedInRestaurantForUser != null){
                             Restaurant.loggedInRestaurantForUser = null ;
-                        }else if (Order.LoggedInOrder != null){
-                            Order.LoggedInOrder = null ;
                         }
                     }
                 } else if (inputArray[0].equals("DISPLAY") && inputArray[1].equals("CART") && inputArray[2].equals("STATUS") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User){
