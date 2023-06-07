@@ -1,11 +1,12 @@
 import Classes.*;
 import Functions.Functions;
-
+import java.sql.* ;
 import java.lang.reflect.Field;
 import java.util.Scanner;
 public class Main {
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws SQLException {
+        SQL.readFromAdminDateBase();
+        SQL.readFromUserDateBase();
         Scanner scanner = new Scanner(System.in);
         boolean inputValidation = true;
         while (inputValidation) {
