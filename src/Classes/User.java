@@ -1,16 +1,17 @@
 package Classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User extends Role {
-    public static ArrayList<User> userArrayList = new ArrayList<User>();
+public class User extends Role implements Serializable {
+    // public static ArrayList<User> userArrayList = new ArrayList<User>();
     public ArrayList<Order> userOrders = new ArrayList<Order>();
     public Cart userCart = new Cart();
     private String userName ;
     private String password;
     public String userID ;
     private double accountCharge = 0;
-    public static int counterIDUser ;
+    //public static int counterIDUser ;
     public User(String userName, String password,String userID) {
         this.userName = userName;
         this.password = password;

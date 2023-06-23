@@ -1,10 +1,11 @@
 package Classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Delivery extends Role {
-    public static int counterIDDelivery ;
-    public static ArrayList<Delivery> deliveriesArraylist = new ArrayList<Delivery>() ;
+public class Delivery extends Role implements Serializable {
+    //public static int counterIDDelivery ;
+    //public static ArrayList<Delivery> deliveriesArraylist = new ArrayList<Delivery>() ;
     public ArrayList<Order> deliveryOrdersHistory = new ArrayList<Order>() ;
     public Order activeOrder ;
     private String userName;

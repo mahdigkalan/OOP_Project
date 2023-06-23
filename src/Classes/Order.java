@@ -1,9 +1,10 @@
 package Classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Order {
-    public static int counterIDOrder;
+public class Order implements Serializable {
+    //public static int counterIDOrder;
     public ArrayList<Food> orderFoods = new ArrayList<Food>();
     public String orderID;
     public Restaurant orderedRestaurant;

@@ -1,4 +1,7 @@
-package Map;
+package src.Map;
+
+import src.Map.Dijkstra;
+import src.Map.Graph;
 
 import java.io.File;
 import java.io.FileWriter;

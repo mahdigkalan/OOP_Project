@@ -1,12 +1,13 @@
 package Classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Admin extends Role {
-    public static ArrayList<Admin> adminArrayList = new ArrayList<Admin>() ;
+public class Admin extends Role implements Serializable {
+    //public static ArrayList<Admin> adminArrayList = new ArrayList<Admin>() ;
     public ArrayList<Restaurant> adminRestaurants = new ArrayList<Restaurant>() ;
     public ArrayList<Restaurant> alphabeticSortOfAdminRestaurants = new ArrayList<Restaurant>() ;
-    public static int counterIDAdmin ;
+    //public static int counterIDAdmin ;
     private String userName ;
     private String password ;
     public String adminID ;

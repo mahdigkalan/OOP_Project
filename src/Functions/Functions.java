@@ -1,13 +1,11 @@
 package Functions;
 import Classes.*;
-
-import java.util.EventListener;
+import java.io.*;
 import java.util.Scanner;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Functions {
     public static Scanner scanner = new Scanner(System.in) ;
-    public static void checkPassword(String password,String Role,String userName){
+    public static void checkPassword(String password,String Role,String userName,StaticArrayLists staticArrayLists){
         boolean numberic = false ;
         boolean capitalLetter = false ;
         boolean smallLetter = false ;
@@ -44,27 +42,27 @@ public class Functions {
         }
         if (numberic && capitalLetter && smallLetter && passwordLength >= 8){
             if (Role.equals("ADMIN")){
-                if (isUserNameUnique(userName,Role)){
-                    Admin admin = new Admin(userName,password,setID("admin")) ;
-                    Admin.adminArrayList.add(admin) ;
+                if (isUserNameUnique(userName,Role,staticArrayLists)){
+                    Admin admin = new Admin(userName,password,setID("admin",staticArrayLists)) ;
+                    staticArrayLists.adminStaticArrayList.add(admin) ;
                     System.out.println("Account created successfully");
                     makeSecurityQuestion(admin);
                 }else {
                     System.out.println("An Admin exist with this username!");
                 }
             }else if (Role.equals("USER")){
-                if (isUserNameUnique(userName,Role)){
-                    User user = new User(userName,password,setID("user")) ;
-                    User.userArrayList.add(user) ;
+                if (isUserNameUnique(userName,Role,staticArrayLists)){
+                    User user = new User(userName,password,setID("user",staticArrayLists)) ;
+                    staticArrayLists.userStaticArrayList.add(user) ;
                     System.out.println("Account created successfully");
                     makeSecurityQuestion(user);
                 }else {
                     System.out.println("A User exist with this username!");
                 }
             }else if (Role.equals("DELIVERY")){
-                if (isUserNameUnique(userName,Role)){
-                    Delivery delivery = new Delivery(userName,password,setID("delivery")) ;
-                    Delivery.deliveriesArraylist.add(delivery) ;
+                if (isUserNameUnique(userName,Role,staticArrayLists)){
+                    Delivery delivery = new Delivery(userName,password,setID("delivery",staticArrayLists)) ;
+                    staticArrayLists.deliveriesArraylist.add(delivery) ;
                     System.out.println("Account created successfully");
                     makeSecurityQuestion(delivery);
                 }else {
@@ -73,12 +71,12 @@ public class Functions {
             }
         }
     }
-    public static void LogIn(String password,String Role,String userName){
+    public static void LogIn(String password,String Role,String userName,StaticArrayLists staticArrayLists){
         if (Role.equals("ADMIN")){
-            if (isUserNameUnique(userName,Role)){
+            if (isUserNameUnique(userName,Role,staticArrayLists)){
                 System.out.println("This username does not exist!");
             }else {
-                Admin admin = Admin.adminArrayList.get(findRoleIndex(userName,Role)) ;
+                Admin admin = staticArrayLists.adminStaticArrayList.get(findRoleIndex(userName,Role,staticArrayLists)) ;
                 if (admin.getPassword().equals(password)){
                     Classes.Role.loggedInRole = admin ;
                     Classes.Role.loggedInRoleExistance = true ;
@@ -93,24 +91,24 @@ public class Functions {
                 }
             }
         }else if (Role.equals("USER")){
-            if (isUserNameUnique(userName,Role)){
+            if (isUserNameUnique(userName,Role,staticArrayLists)){
                 System.out.println("This username does not exist!");
             }else {
-                User user = User.userArrayList.get(findRoleIndex(userName,Role)) ;
+                User user = staticArrayLists.userStaticArrayList.get(findRoleIndex(userName,Role,staticArrayLists)) ;
                 if (user.getPassword().equals(password)){
                     Classes.Role.loggedInRole = user ;
                     Classes.Role.loggedInRoleExistance = true ;
                     System.out.println("you are logged in as USER!");
-                    Functions.showAllAvailableRestaurants();
+                    Functions.showAllAvailableRestaurants(staticArrayLists);
                 }else {
                     System.out.println("password is incorrect!");
                 }
             }
         }else if (Role.equals("DELIVERY")){
-            if (isUserNameUnique(userName,Role)){
+            if (isUserNameUnique(userName,Role,staticArrayLists)){
                 System.out.println("This username does not exist!");
             }else {
-                Delivery delivery = Delivery.deliveriesArraylist.get(findRoleIndex(userName,Role)) ;
+                Delivery delivery = staticArrayLists.deliveriesArraylist.get(findRoleIndex(userName,Role,staticArrayLists)) ;
                 if (delivery.getPassword().equals(password)){
                     Classes.Role.loggedInRole = delivery ;
                     Classes.Role.loggedInRoleExistance = true ;
@@ -121,55 +119,55 @@ public class Functions {
             }
         }
     }
-    public static boolean isUserNameUnique(String UserName,String Role){
+    public static boolean isUserNameUnique(String UserName,String Role,StaticArrayLists staticArrayLists){
         boolean isUserNameUnique = true ;
         if (Role.equals("ADMIN")){
-            for (int i = 0 ; i < Admin.adminArrayList.size() ; i++){
-                if (Admin.adminArrayList.get(i).getUserName().equals(UserName)){
+            for (int i = 0 ; i < staticArrayLists.adminStaticArrayList.size() ; i++){
+                if (staticArrayLists.adminStaticArrayList.get(i).getUserName().equals(UserName)){
                     isUserNameUnique = false ;
                 }
             }
         }else if (Role.equals("USER")){
-            for (int i = 0 ; i < User.userArrayList.size() ; i++){
-                if (User.userArrayList.get(i).getUserName().equals(UserName)){
+            for (int i = 0 ; i < staticArrayLists.userStaticArrayList.size() ; i++){
+                if (staticArrayLists.userStaticArrayList.get(i).getUserName().equals(UserName)){
                     isUserNameUnique = false ;
                 }
             }
         }else if (Role.equals("DELIVERY")){
-            for (int i = 0 ; i < Delivery.deliveriesArraylist.size() ; i++){
-                if (Delivery.deliveriesArraylist.get(i).getUserName().equals(UserName)){
+            for (int i = 0 ; i < staticArrayLists.deliveriesArraylist.size() ; i++){
+                if (staticArrayLists.deliveriesArraylist.get(i).getUserName().equals(UserName)){
                     isUserNameUnique = false ;
                 }
             }
         }
         return isUserNameUnique ;
     }
-    public static int findRoleIndex(String userName,String Role){
+    public static int findRoleIndex(String userName,String Role,StaticArrayLists staticArrayLists){
         int index = 0 ;
         if (Role.equals("ADMIN")){
-            for (int i = 0 ; i < Admin.adminArrayList.size() ; i++){
-                if (Admin.adminArrayList.get(i).getUserName().equals(userName)){
+            for (int i = 0 ; i < staticArrayLists.adminStaticArrayList.size() ; i++){
+                if (staticArrayLists.adminStaticArrayList.get(i).getUserName().equals(userName)){
                     index = i ;
                 }
             }
         }else if (Role.equals("USER")){
-            for (int i = 0 ; i < User.userArrayList.size() ; i++){
-                if (User.userArrayList.get(i).getUserName().equals(userName)){
+            for (int i = 0 ; i < staticArrayLists.userStaticArrayList.size() ; i++){
+                if (staticArrayLists.userStaticArrayList.get(i).getUserName().equals(userName)){
                     index = i ;
                 }
             }
         }else if (Role.equals("DELIVERY")){
-            for (int i = 0 ; i < Delivery.deliveriesArraylist.size() ; i++){
-                if (Delivery.deliveriesArraylist.get(i).getUserName().equals(userName)){
+            for (int i = 0 ; i < staticArrayLists.deliveriesArraylist.size() ; i++){
+                if (staticArrayLists.deliveriesArraylist.get(i).getUserName().equals(userName)){
                     index = i ;
                 }
             }
         }
         return index ;
     }
-    public static void ForgetPassword(String Role,String userName){
+    public static void ForgetPassword(String Role,String userName,StaticArrayLists staticArrayLists){
         if (Role.equals("ADMIN")){
-            Admin admin = Admin.adminArrayList.get(findRoleIndex(userName,Role)) ;
+            Admin admin = staticArrayLists.adminStaticArrayList.get(findRoleIndex(userName,Role,staticArrayLists)) ;
             System.out.println("please answer following question to reset your password : ");
             System.out.println(admin.securityQuestion);
             String answer = scanner.nextLine() ;
@@ -181,7 +179,7 @@ public class Functions {
                 System.out.println("your answer is incorrect!");
             }
         }else {
-            User user = User.userArrayList.get(findRoleIndex(userName,Role)) ;
+            User user = staticArrayLists.userStaticArrayList.get(findRoleIndex(userName,Role,staticArrayLists)) ;
             System.out.println("please answer following question to reset your password : ");
             System.out.println(user.securityQuestion);
             String answer = scanner.nextLine() ;
@@ -240,43 +238,43 @@ public class Functions {
             }
         }
     }
-    public static String setID(String thingString){
+    public static String setID(String thingString,StaticArrayLists staticArrayLists){
         String firstchapter = new String("") ;
         String ID = new String("") ;
         int counter = 0 ;
         int randomNumber = (int) ( ((Math.random()) * 9999) + 1 ) ;
         if (thingString.equals("restaurant")){
             firstchapter = new String("R") ;
-            Restaurant.counterIDRestaurant++ ;
-            counter = Restaurant.counterIDRestaurant ;
+            staticArrayLists.counterIDRestaurant++ ;
+            counter = staticArrayLists.counterIDRestaurant ;
         }else if (thingString.equals("food")){
             firstchapter = new String("F") ;
-            Food.counterIDFood++ ;
-            counter = Food.counterIDFood ;
+            staticArrayLists.counterIDFood++ ;
+            counter = staticArrayLists.counterIDFood ;
         }else if (thingString.equals("comment")){
             firstchapter = new String("C") ;
-            Comment.counterIDComment++ ;
-            counter = Comment.counterIDComment ;
+            staticArrayLists.counterIDComment++ ;
+            counter = staticArrayLists.counterIDComment ;
         }else if (thingString.equals("order")){
             firstchapter = new String("O") ;
-            Order.counterIDOrder++ ;
-            counter = Order.counterIDOrder ;
+            staticArrayLists.counterIDOrder++ ;
+            counter = staticArrayLists.counterIDOrder ;
         }else if (thingString.equals("rating")){
             firstchapter = new String("RA") ;
-            Rating.counterIDRating++ ;
-            counter = Rating.counterIDRating ;
+            staticArrayLists.counterIDRating++ ;
+            counter = staticArrayLists.counterIDRating ;
         }else if (thingString.equals("delivery")){
             firstchapter = new String("D") ;
-            Delivery.counterIDDelivery++ ;
-            counter = Delivery.counterIDDelivery ;
+            staticArrayLists.counterIDDelivery++ ;
+            counter = staticArrayLists.counterIDDelivery ;
         }else if (thingString.equals("admin")){
             firstchapter = new String("A") ;
-            Admin.counterIDAdmin++ ;
-            counter = Admin.counterIDAdmin ;
+            staticArrayLists.counterIDAdmin++ ;
+            counter = staticArrayLists.counterIDAdmin ;
         }else if (thingString.equals("user")){
             firstchapter = new String("U") ;
-            User.counterIDUser++ ;
-            counter = User.counterIDUser ;
+            staticArrayLists.counterIDUser++ ;
+            counter = staticArrayLists.counterIDUser ;
         }
         ID = firstchapter + randomNumber + counter ;
         return ID ;
@@ -319,7 +317,7 @@ public class Functions {
             }
         }
     }
-    public static void addFood(String foodName,int foodCost){
+    public static void addFood(String foodName,int foodCost,StaticArrayLists staticArrayLists){
         Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
         boolean foodExistance = false ;
         for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
@@ -331,9 +329,9 @@ public class Functions {
             System.out.println("sorry a food exist with this name in the menu ! ");
         }else {
             Food food = new Food(foodName,foodCost) ;
-            food.foodID = setID("food") ;
+            food.foodID = setID("food",staticArrayLists) ;
             restaurant.restaurantMenu.add(food) ;
-            Food.allFoodsArrayList.add(food) ;
+            staticArrayLists.allFoodsArrayList.add(food) ;
             System.out.println("food added to menu successfully!");
         }
     }
@@ -347,12 +345,12 @@ public class Functions {
             }
         }
     }
-    public static void deleteFood(String foodID){
+    public static void deleteFood(String foodID,StaticArrayLists staticArrayLists){
         Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
         boolean foodIDExistance = false , foodExistanceRestaurant = false;
         int foodIndexFood = 0 , foodIndexRestaurant = 0 ;
-        for (int i = 0 ; i < Food.allFoodsArrayList.size() ; i++){
-            if (Food.allFoodsArrayList.get(i).foodID.equals(foodID)){
+        for (int i = 0 ; i < staticArrayLists.allFoodsArrayList.size() ; i++){
+            if (staticArrayLists.allFoodsArrayList.get(i).foodID.equals(foodID)){
                 foodIDExistance = true ;
                 foodIndexFood = i ;
             }
@@ -365,7 +363,7 @@ public class Functions {
         }
         if (foodIDExistance){
             if (foodExistanceRestaurant){
-                Food.allFoodsArrayList.remove(foodIndexFood) ;
+                staticArrayLists.allFoodsArrayList.remove(foodIndexFood) ;
                 restaurant.restaurantMenu.remove(foodIndexRestaurant) ;
                 System.out.println("Food deleted successfully!");
             }else {
@@ -563,35 +561,35 @@ public class Functions {
             }
         }
     }
-    public static void showAllAvailableRestaurants(){
-        if (Restaurant.allRestaurantsArrayList.size() == 0)
+    public static void showAllAvailableRestaurants(StaticArrayLists staticArrayLists){
+        if (staticArrayLists.allRestaurantsArrayList.size() == 0)
             System.out.println("Sorry, There is no available restaurant at this time !!!");
         else {
             System.out.println("Here is the list of available restaurants for you:");
-            for (int i = 0; i < Restaurant.allRestaurantsArrayList.size(); i++)
-                System.out.println("Restaurant \"" + Restaurant.allRestaurantsArrayList.get(i).restaurantName + "\" -> with the ID \"" + Restaurant.allRestaurantsArrayList.get(i).restaurantID + "\"");
+            for (int i = 0; i < staticArrayLists.allRestaurantsArrayList.size(); i++)
+                System.out.println("Restaurant \"" + staticArrayLists.allRestaurantsArrayList.get(i).restaurantName + "\" -> with the ID \"" + staticArrayLists.allRestaurantsArrayList.get(i).restaurantID + "\"");
         }
     }
-    public static void ShowRelatedRestaurants (String name){
+    public static void ShowRelatedRestaurants (String name,StaticArrayLists staticArrayLists){
         boolean found = false;
-        for (int i = 0; i < Restaurant.allRestaurantsArrayList.size(); i++)
-            if (Restaurant.allRestaurantsArrayList.get(i).restaurantName.indexOf(name) != -1)
+        for (int i = 0; i < staticArrayLists.allRestaurantsArrayList.size(); i++)
+            if (staticArrayLists.allRestaurantsArrayList.get(i).restaurantName.indexOf(name) != -1)
                 found = true;
         if (found) {
             System.out.println("Related restaurants with the name \"" + name + "\":");
-            for (int i = 0; i < Restaurant.allRestaurantsArrayList.size(); i++)
-                if (Restaurant.allRestaurantsArrayList.get(i).restaurantName.indexOf(name) != -1)
-                    System.out.println("Restaurant \"" + Restaurant.allRestaurantsArrayList.get(i).restaurantName + "\" -> with the ID \"" + Restaurant.allRestaurantsArrayList.get(i).restaurantID + "\" found!");
+            for (int i = 0; i < staticArrayLists.allRestaurantsArrayList.size(); i++)
+                if (staticArrayLists.allRestaurantsArrayList.get(i).restaurantName.indexOf(name) != -1)
+                    System.out.println("Restaurant \"" + staticArrayLists.allRestaurantsArrayList.get(i).restaurantName + "\" -> with the ID \"" + staticArrayLists.allRestaurantsArrayList.get(i).restaurantID + "\" found!");
         } else
             System.out.println("There is no related restaurant with this name !!!");
     }
-    public static void selectRestaurant (String restaurantID){
+    public static void selectRestaurant (String restaurantID,StaticArrayLists staticArrayLists){
         int k = -1;
-        for (int i = 0; i < Restaurant.allRestaurantsArrayList.size(); i++)
-            if (Restaurant.allRestaurantsArrayList.get(i).restaurantID.equals(restaurantID))
+        for (int i = 0; i < staticArrayLists.allRestaurantsArrayList.size(); i++)
+            if (staticArrayLists.allRestaurantsArrayList.get(i).restaurantID.equals(restaurantID))
                 k = i;
         if (k != -1) {
-            Restaurant.loggedInRestaurantForUser = Restaurant.allRestaurantsArrayList.get(k);
+            Restaurant.loggedInRestaurantForUser = staticArrayLists.allRestaurantsArrayList.get(k);
             System.out.println("Restaurant with the ID \"" + restaurantID + "\" selected!");
             showMenuForUser(Restaurant.loggedInRestaurantForUser);
         }
@@ -642,12 +640,12 @@ public class Functions {
                 System.out.println("\"" + restaurant.restaurantCommentsArrayList.get(i).commentedUser.getUserName() + "\" says: " + restaurant.restaurantCommentsArrayList.get(i).comment + " about this restaurant.");
         }
     }
-    public static void getRestaurantComment(Restaurant restaurant){
+    public static void getRestaurantComment(Restaurant restaurant,StaticArrayLists staticArrayLists){
         System.out.print("Please enter your comment about this restaurant \"" + restaurant.restaurantName + "\": ");
         String comment = scanner.nextLine();
         restaurant.restaurantCommentsArrayList.add(new Comment());
         restaurant.restaurantCommentsArrayList.get(restaurant.restaurantCommentsArrayList.size()-1).comment = comment;
-        restaurant.restaurantCommentsArrayList.get(restaurant.restaurantCommentsArrayList.size()-1).commentID = setID("comment");
+        restaurant.restaurantCommentsArrayList.get(restaurant.restaurantCommentsArrayList.size()-1).commentID = setID("comment",staticArrayLists);
         restaurant.restaurantCommentsArrayList.get(restaurant.restaurantCommentsArrayList.size()-1).commentedUser = (User) Role.loggedInRole;
         System.out.println("Thanks for your oponion :)");
     }
@@ -667,14 +665,14 @@ public class Functions {
             System.out.println("Thanks");
         }
     }
-    public static void getRestaurantRating (){
+    public static void getRestaurantRating (StaticArrayLists staticArrayLists){
         System.out.print("Please enter your rating to this restaurant: (0 to 5)");
         double rating  = scanner.nextDouble();
         if (rating >= 0 && rating <= 5){
             System.out.println("Thanks for your rating :)");
             Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.add(new Rating());
             Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).rating = rating;
-            Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).ratingID = setID("rating");
+            Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).ratingID = setID("rating",staticArrayLists);
             Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).ratedUser = (User) Role.loggedInRole;
         } else
             System.out.println("Sorry, You should rate from 0 to 5 !!!");
@@ -695,12 +693,12 @@ public class Functions {
             System.out.println("Thanks");
         }
     }
-    public static void getFoodComment(Food food){
+    public static void getFoodComment(Food food,StaticArrayLists staticArrayLists){
         System.out.print("Please enter your comment about this food \"" + food.foodName + "\": ");
         String comment = scanner.nextLine();
         food.foodCommentsArrayList.add(new Comment());
         food.foodCommentsArrayList.get(food.foodCommentsArrayList.size()-1).comment = comment;
-        food.foodCommentsArrayList.get(food.foodCommentsArrayList.size()-1).commentID = setID("comment");
+        food.foodCommentsArrayList.get(food.foodCommentsArrayList.size()-1).commentID = setID("comment",staticArrayLists);
         food.foodCommentsArrayList.get(food.foodCommentsArrayList.size()-1).commentedUser = (User) Role.loggedInRole;
         System.out.println("Thanks for your oponion :)");
     }
@@ -720,14 +718,14 @@ public class Functions {
             System.out.println("Thanks");
         }
     }
-    public static void getFoodRating (){
+    public static void getFoodRating (StaticArrayLists staticArrayLists){
         System.out.print("Please enter your rating to this food: (0 to 5)");
         double rating  = scanner.nextDouble();
         if (rating >= 0 && rating <= 5){
             System.out.println("Thanks for your rating :)");
             Food.selectedFoodForUser.foodRatingsArrayList.add(new Rating());
             Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).rating = rating;
-            Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).ratingID = setID("rating");
+            Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).ratingID = setID("rating",staticArrayLists);
             Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).ratedUser = (User) Role.loggedInRole;
         } else
             System.out.println("Sorry, You should rate from 0 to 5 !!!");

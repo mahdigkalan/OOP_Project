@@ -1,4 +1,4 @@
-package Map;
+package src.Map;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ public class Dijkstra<T> {
     private ArrayList<Node<T>> path = null;
     private Long cost = null;
 
-    protected Dijkstra(Graph<T> graph) {
+    public Dijkstra(Graph<T> graph) {
         this.graph = graph;
     }
 
