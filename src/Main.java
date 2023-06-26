@@ -28,7 +28,7 @@ public class Main {
         boolean inputValidation = true;
         while (inputValidation) {
             String input = scanner.nextLine();
-            if (input.equals("END")) {
+            if (input.equals("END") && !Role.loggedInRoleExistance) {
                 inputValidation = false ;
                 break;
             } else {
@@ -41,7 +41,7 @@ public class Main {
                     }
                 } else if (inputArray[0].equals("LOGIN") && inputArray.length == 4 && !Role.loggedInRoleExistance) {
                     Functions.LogIn(inputArray[3], inputArray[1], inputArray[2],staticArrayLists);
-                } else if (input.equals("LOGOUT") && Role.loggedInRoleExistance) {
+                } else if (input.equals("LOGOUT") && Role.loggedInRoleExistance && Restaurant.loggedInRestaurantForAdmin == null && Restaurant.loggedInRestaurantForUser == null) {
                     if (Role.loggedInRoleExistance) {
                         Role.loggedInRole = null;
                         Role.loggedInRoleExistance = false;
@@ -245,7 +245,7 @@ public class Main {
                 } else if (inputArray[0].equals("SEARCH") && inputArray[1].equals("RESTAURANT") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser == null && Food.selectedFoodForUser == null) {
                     String restaurantName = inputArray[2];
                     Functions.ShowRelatedRestaurants(restaurantName,staticArrayLists);
-                } else if (inputArray[0].equals("SELECT") && inputArray[1].equals("RESTAURANT") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser == null && Food.selectedFoodForUser == null) {
+                } else if (inputArray[0].equals("SELECT") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser == null && Food.selectedFoodForUser == null) {
                     String restaurantID = inputArray[1];
                     Functions.selectRestaurant(restaurantID,staticArrayLists);
                 } else if (inputArray[0].equals("ACCESS") && inputArray[1].equals("ORDER") && inputArray[2].equals("HISTORY") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Food.selectedFoodForUser == null && Restaurant.loggedInRestaurantForUser == null){
@@ -295,8 +295,16 @@ public class Main {
     }
     public static void serializeObjects(StaticArrayLists staticArrayLists){
         try{
+            ////////////////////////////////////////////////
+            FileWriter fileWriter = new FileWriter("D:\\Java\\Project\\OOP_Project\\StaticArrayLists.txt",false) ;
+            PrintWriter pw = new PrintWriter(fileWriter, false);
+            pw.flush();
+            pw.close();
+            fileWriter.close();
+            ////////////////////////////////////////////////
             FileOutputStream fileout = new FileOutputStream("D:\\Java\\Project\\OOP_Project\\StaticArrayLists.txt") ;
             ObjectOutputStream out = new ObjectOutputStream(fileout) ;
+            out.writeObject("");
             out.writeObject(staticArrayLists);
             out.close();
             fileout.close();

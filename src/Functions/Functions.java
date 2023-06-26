@@ -292,25 +292,26 @@ public class Functions {
     }
     public static void editFood(String foodID,String changingParameters,String newValue){
         Restaurant restaurant = Restaurant.loggedInRestaurantForAdmin ;
-        Food food = new Food("",0) ;
+        int index = 0 ;
         for (int i = 0 ; i < restaurant.restaurantMenu.size() ; i++){
             if (foodID.equals(restaurant.restaurantMenu.get(i).foodID)){
-                food = restaurant.restaurantMenu.get(i) ;
+                index = i ;
+                //food = restaurant.restaurantMenu.get(i) ;
             }
         }
         if (changingParameters.equals("NAME")){
-            food.foodName = newValue ;
+            restaurant.restaurantMenu.get(index).foodName = newValue ;
             System.out.println("new name sat for food with id of : "+foodID);
         }else if (changingParameters.equals("PRICE")){
-            food.foodCost = Integer.parseInt(newValue) ;
+            restaurant.restaurantMenu.get(index).foodCost = Integer.parseInt(newValue) ;
             System.out.println("new price sat for food with id of : "+foodID);
         }else if (changingParameters.equals("DISCOUNT")){
-            if (food.discountActivation){
-                food.discountActivation = false ;
+            if (restaurant.restaurantMenu.get(index).discountActivation){
+                restaurant.restaurantMenu.get(index).discountActivation = false ;
             }else {
-                food.discountActivation = true ;
+                restaurant.restaurantMenu.get(index).discountActivation = true ;
                 if (Integer.parseInt(newValue) <= 50 && Integer.parseInt(newValue) > 0){
-                    food.discountValue = Integer.parseInt(newValue) ;
+                    restaurant.restaurantMenu.get(index).discountValue = Integer.parseInt(newValue) ;
                 }else {
                     System.out.println("discount value must be less than 50 percent and positive !");
                 }
