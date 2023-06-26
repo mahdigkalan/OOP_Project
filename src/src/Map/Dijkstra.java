@@ -12,6 +12,11 @@ public class Dijkstra<T> {
         this.graph = graph;
     }
 
+    protected Dijkstra(String path) {
+        Graph<T> graph = Graph.readGraph(path);
+        this.Dijkstra(graph);
+    }
+
     public Boolean search(T root, T target) {
         Graph<T> graph = this.graph.clone();
 
