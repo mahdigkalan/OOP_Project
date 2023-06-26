@@ -7,21 +7,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-/*
-* Node is for storing graph vertices data
-* T is Node name's class
-* Note: Node is equivalent to city in Map
-*/
-
 class Node<T> {
     private T name;
-    // cost is used in dijketsra alg: it is the cost of path from root to this Node
     private Long cost;
-    // isVisited is used in dijkestra alg: for avoiding infinite loop in alg
     private Boolean isVisited;
-    // parent is used in dijkestra alg: for evaluating the path, parent is the previous node 
     private Node<T> parent;
-    // neighbors holds this Node's neighbor nodes with the weight, Equivalent to neighbors edges 
     private Hashtable<Node<T>, Long> neighbors;
 
     protected Node(T name) {
@@ -32,14 +22,6 @@ class Node<T> {
         this.parent = null;
     }
 
-    /*
-    * adding a neighbor (Equivalent to edge with weight)
-    * neoghbor: the Node will be added as neighbor, its class has to be the same as this Node's class
-    * wight:    the weight between this Node and neighbor Node
-    * Note:     the direction of the edge is from this Node to neighbor Node ( thisNode -----> neighborNode )
-    * output:   flase if neighbor exists otherwise true
-    */
-    
     public Boolean addNeighbor(Node<T> neighbor, Long weight) {
         if(this.containsNeighbor(neighbor)) return false;
         this.neighbors.put(neighbor, weight);
@@ -111,16 +93,10 @@ class Node<T> {
     }
 }
 
-/*
-* Graph is for storing graph's data including vertices and edges
-* T is graph's nodes class
-* Graph is for modeling Map, Nodes is cities (or homes or ...) and Edges (or weight between nodes) is the cost of path between cities (or homes or ...)
-*/
-
 public class Graph<T> {
     private Integer nodeSize;
     private Integer edgeSize;
-    private Hashtable<Node<T>, Hashtable<Node<T>, Long>> graph = null; // graph is in fact edges data but holds all data about graph
+    private Hashtable<Node<?>, Hashtable<Node<?>, Long>> graph = null;
     private ArrayList<Node<T>> nodes;
 
     protected Graph(Integer nodeSize, Integer edgeSize) {
