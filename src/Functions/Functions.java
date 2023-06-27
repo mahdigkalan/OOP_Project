@@ -3,7 +3,7 @@ import Classes.*;
 import java.io.*;
 import java.util.Scanner;
 
-public class Functions {
+public class Functions implements Serializable {
     public static Scanner scanner = new Scanner(System.in) ;
     public static void checkPassword(String password,String Role,String userName,StaticArrayLists staticArrayLists){
         boolean numberic = false ;

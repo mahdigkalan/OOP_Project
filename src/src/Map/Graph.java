@@ -1,5 +1,6 @@
 package src.Map;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -13,7 +14,7 @@ import java.util.Scanner;
 * Note: Node is equivalent to city in Map
 */
 
-class Node<T> {
+class Node<T> implements Serializable {
     private T name;
     // cost is used in dijketsra alg: it is the cost of path from root to this Node
     private Long cost;
@@ -117,7 +118,7 @@ class Node<T> {
 * Graph is for modeling Map, Nodes is cities (or homes or ...) and Edges (or weight between nodes) is the cost of path between cities (or homes or ...)
 */
 
-public class Graph<T> {
+public class Graph<T> implements Serializable {
     private Integer nodeSize;
     private Integer edgeSize;
     private Hashtable<Node<T>, Hashtable<Node<T>, Long>> graph = null; // graph is in fact edges data but holds all data about graph

@@ -1,8 +1,9 @@
-package Map;
+package src.Map;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Map {
+public class Map implements Serializable {
     private final Dijkstra<Integer> dijkstra;
 
     public Map(String MapPath) {

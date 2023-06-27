@@ -1,6 +1,8 @@
 package Classes;
 
-public enum STATUS {
+import java.io.Serializable;
+
+public enum STATUS implements Serializable {
     COOKING,
     SENT,
     DELIVERED,

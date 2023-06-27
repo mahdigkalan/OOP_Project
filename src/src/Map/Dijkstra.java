@@ -1,9 +1,10 @@
 package src.Map;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.ArrayList;
 
-public class Dijkstra<T> {
+public class Dijkstra<T> implements Serializable {
     private Graph<T> graph;
     private Node<T> target, root;
     private ArrayList<Node<T>> path = null;
