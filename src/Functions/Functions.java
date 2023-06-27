@@ -632,13 +632,44 @@ public class Functions implements Serializable {
         else
             System.out.println("There is no related food with this ID !!!");
     }
+    public static void displayFoodRating(User user, Food food){
+        if (food.foodRatingsArrayList.size() == 0)
+            System.out.println("Nobody rates this food yet !!!");
+        else {
+            int k = -1;
+            for (int i = 0;i<food.foodRatingsArrayList.size();i++)
+                if (food.foodRatingsArrayList.get(i).ratedUser == user)
+                    k = i;
+            if (k != -1)
+                System.out.println("You have already rated \"" + food.foodRatingsArrayList.get(k).rating + "\" with the ID:" + food.foodRatingsArrayList.get(k).ratingID + " to this food ");
+            else
+                System.out.println("You haven't rate this food yet");
+            System.out.println("This food gets the rate of \"" + food.getRating() + "\" from the Users!");
+        }
+    }
+    public static void displayRestaurantRating(User user, Restaurant restaurant){
+        if (restaurant.restaurantRatingsArrayList.size() == 0)
+            System.out.println("Nobody rates this restaurant yet !!!");
+        else {
+            int k = -1;
+            for (int i = 0;i<restaurant.restaurantRatingsArrayList.size();i++)
+                if (restaurant.restaurantRatingsArrayList.get(i).ratedUser == user)
+                    k = i;
+            if (k != -1)
+                System.out.println("You have already rated \"" + restaurant.restaurantRatingsArrayList.get(k).rating + "\" with the ID:" + restaurant.restaurantRatingsArrayList.get(k).ratingID + " to this food ");
+            else
+                System.out.println("You haven't rate this food yet");
+            System.out.println("This food gets the rate of \"" + restaurant.getRating() + "\" from the Users!");
+        }
+    }
+
     public static void showRestaurantComments (Restaurant restaurant){
         if (restaurant.restaurantCommentsArrayList.size() == 0)
             System.out.println("There is no comments about this restaurant!");
         else {
             System.out.println("Comments:");
             for (int i = 0; i < restaurant.restaurantCommentsArrayList.size(); i++)
-                System.out.println("\"" + restaurant.restaurantCommentsArrayList.get(i).commentedUser.getUserName() + "\" says: " + restaurant.restaurantCommentsArrayList.get(i).comment + " about this restaurant.");
+                System.out.println("Comment ID: \""+ restaurant.restaurantCommentsArrayList.get(i).commentID + "\" -> \"" + restaurant.restaurantCommentsArrayList.get(i).commentedUser.userID + "\" says: " + restaurant.restaurantCommentsArrayList.get(i).comment);
         }
     }
     public static void getRestaurantComment(Restaurant restaurant,StaticArrayLists staticArrayLists){
@@ -653,7 +684,7 @@ public class Functions implements Serializable {
     public static void editRestaurantComment(String commentID){
         int k = -1;
         for (int i = 0; i < Restaurant.loggedInRestaurantForUser.restaurantCommentsArrayList.size(); i++)
-            if (Restaurant.loggedInRestaurantForUser.restaurantCommentsArrayList.get(i).commentID == commentID)
+            if (Restaurant.loggedInRestaurantForUser.restaurantCommentsArrayList.get(i).commentID.equals(commentID))
                 k = i;
         if (k == -1)
             System.out.println("Sorry, There is no comment with this ID !!!");
@@ -666,17 +697,26 @@ public class Functions implements Serializable {
             System.out.println("Thanks");
         }
     }
-    public static void getRestaurantRating (StaticArrayLists staticArrayLists){
-        System.out.print("Please enter your rating to this restaurant: (0 to 5)");
-        double rating  = scanner.nextDouble();
-        if (rating >= 0 && rating <= 5){
-            System.out.println("Thanks for your rating :)");
-            Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.add(new Rating());
-            Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).rating = rating;
-            Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).ratingID = setID("rating",staticArrayLists);
-            Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).ratedUser = (User) Role.loggedInRole;
-        } else
-            System.out.println("Sorry, You should rate from 0 to 5 !!!");
+    public static void getRestaurantRating (StaticArrayLists staticArrayLists,User user,Restaurant restaurant){
+        int k = -1;
+        for (int i=0;i<restaurant.restaurantRatingsArrayList.size();i++)
+            if (restaurant.restaurantRatingsArrayList.get(i).ratedUser == user)
+                k = i;
+        if (k != -1){
+            System.out.println("You have already rated this food, now you can edit that using ratingID.");
+        }
+        else {
+            System.out.print("Please enter your rating to this restaurant: (0 to 5)");
+            double rating  = scanner.nextDouble();
+            if (rating >= 0 && rating <= 5){
+                System.out.println("Thanks for your rating :)");
+                Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.add(new Rating());
+                Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).rating = rating;
+                Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).ratingID = setID("rating",staticArrayLists);
+                Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.get(Restaurant.loggedInRestaurantForUser.restaurantRatingsArrayList.size()-1).ratedUser = (User) Role.loggedInRole;
+            } else
+                System.out.println("Sorry, You should rate from 0 to 5 !!!");
+        }
     }
     public static void editRestaurantRating(String ratingID){
         int k = -1;
@@ -706,7 +746,7 @@ public class Functions implements Serializable {
     public static void editFoodComment(String commentID){
         int k = -1;
         for (int i = 0; i < Food.selectedFoodForUser.foodCommentsArrayList.size(); i++)
-            if (Food.selectedFoodForUser.foodCommentsArrayList.get(i).commentID == commentID)
+            if (Food.selectedFoodForUser.foodCommentsArrayList.get(i).commentID.equals(commentID))
                 k = i;
         if (k == -1)
             System.out.println("Sorry, There is no comment with this ID !!!");
@@ -719,17 +759,26 @@ public class Functions implements Serializable {
             System.out.println("Thanks");
         }
     }
-    public static void getFoodRating (StaticArrayLists staticArrayLists){
-        System.out.print("Please enter your rating to this food: (0 to 5)");
-        double rating  = scanner.nextDouble();
-        if (rating >= 0 && rating <= 5){
-            System.out.println("Thanks for your rating :)");
-            Food.selectedFoodForUser.foodRatingsArrayList.add(new Rating());
-            Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).rating = rating;
-            Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).ratingID = setID("rating",staticArrayLists);
-            Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).ratedUser = (User) Role.loggedInRole;
-        } else
-            System.out.println("Sorry, You should rate from 0 to 5 !!!");
+    public static void getFoodRating (StaticArrayLists staticArrayLists,User user,Food food){
+        int k = -1;
+        for (int i=0;i<food.foodRatingsArrayList.size();i++)
+            if (food.foodRatingsArrayList.get(i).ratedUser == user)
+                k = i;
+        if (k != -1){
+            System.out.println("You have already rated this food, now you can edit that using ratingID.");
+        }
+        else{
+            System.out.print("Please enter your rating to this food: (0 to 5)");
+            double rating  = scanner.nextDouble();
+            if (rating >= 0 && rating <= 5){
+                System.out.println("Thanks for your rating :)");
+                Food.selectedFoodForUser.foodRatingsArrayList.add(new Rating());
+                Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).rating = rating;
+                Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).ratingID = setID("rating",staticArrayLists);
+                Food.selectedFoodForUser.foodRatingsArrayList.get(Food.selectedFoodForUser.foodRatingsArrayList.size()-1).ratedUser = (User) Role.loggedInRole;
+            } else
+                System.out.println("Sorry, You should rate from 0 to 5 !!!");
+        }
     }
     public static void editFoodRating(String ratingID){
         int k = -1;
@@ -753,7 +802,7 @@ public class Functions implements Serializable {
         else {
             System.out.println("Comments:");
             for (int i = 0; i < Food.selectedFoodForUser.foodCommentsArrayList.size(); i++)
-                System.out.println("\"" + Food.selectedFoodForUser.foodCommentsArrayList.get(i).commentedUser.getUserName() + "\" says: \"" + Food.selectedFoodForUser.foodCommentsArrayList.get(i).comment + "\" about this food.");
+                System.out.println("Comment ID: \""+ Food.selectedFoodForUser.foodCommentsArrayList.get(i).commentID + "\" -> \"" + Food.selectedFoodForUser.foodCommentsArrayList.get(i).commentedUser.userID + "\" says: " + Food.selectedFoodForUser.foodCommentsArrayList.get(i).comment);
         }
     }
     public static void showOrdersHistory(User user){
@@ -789,11 +838,14 @@ public class Functions implements Serializable {
             System.out.println("There is no Order with this ID !!!");
     }
     public static void showCartStatus(User user){
-        for (int i=0;i<user.userCart.cartorders.size();i++){
-            System.out.print("From the restaurant \"" + user.userCart.cartorders.get(i).orderedRestaurant.restaurantName + "\" ");
-            System.out.print("with the total cost \"" + user.userCart.cartorders.get(i).getOrderCost() + "\" ");
-            System.out.println("and the ID \"" + user.userCart.cartorders.get(i).orderID + "\".");
-        }
+        if (user.userCart.cartorders.size() == 0)
+            System.out.println("You have no orders in your cart");
+        else
+            for (int i=0;i<user.userCart.cartorders.size();i++){
+                System.out.print((i+1) + "-> From the restaurant \"" + user.userCart.cartorders.get(i).orderedRestaurant.restaurantName + "\" ");
+                System.out.print("with the total cost \"" + user.userCart.cartorders.get(i).getOrderCost() + "\" ");
+                System.out.println("and the ID \"" + user.userCart.cartorders.get(i).orderID + "\".");
+            }
     }
     public static void confirmOrder(User user, String orderID){
         int k = -1;
@@ -824,7 +876,26 @@ public class Functions implements Serializable {
             System.out.println("Sorry, you should enter a positive value !!!");
     }
     public static void showAccountCharge(User user){
-        System.out.println("You have \"" + user.getAccountCharge() + "\"$ in your account :)");
+        System.out.println("You have " + user.getAccountCharge() + "$ in your account :)");
+    }
+    public static void addFoodToCart(User user,Restaurant restaurant,Food food,StaticArrayLists staticArrayLists){
+        if (user.userCart.cartorders.size() != 0){
+            int k = - 1;
+            for (int i=0 ; i < user.userCart.cartorders.size() ; i++)
+                if (restaurant.restaurantID.equals(user.userCart.cartorders.get(i).orderedRestaurant.restaurantID))
+                    k = i ;
+            if (k == -1){
+                Order order = new Order(Functions.setID("order",staticArrayLists)) ;
+                order.orderFoods.add(food)  ;
+                order.orderedRestaurant = restaurant ;
+                order.orderedUser = user ;
+                user.userCart.cartorders.add(order) ;
+                System.out.println();
+            }else {
+                user.userCart.cartorders.get(k).orderFoods.add(food);
+                System.out.println();
+            }
+        }
     }
     public static void findDelivery(){
 

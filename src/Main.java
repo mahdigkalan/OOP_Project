@@ -255,7 +255,7 @@ public class Main {
                 } else if (inputArray[0].equals("SEARCH") && inputArray[1].equals("FOOD") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser == null) {
                     String foodName = inputArray[1];
                     Functions.ShowRelatedFoods(foodName);
-                } else if (inputArray[0].equals("SELECT") && inputArray[1].equals("FOOD") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser == null) {
+                } else if (inputArray[0].equals("SELECT") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser == null) {
                     String foodID = inputArray[1];
                     Functions.selectFood(foodID);
                 } else if (inputArray[0].equals("DISPLAY") && inputArray[1].equals("COMMENTS") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser == null) {
@@ -266,9 +266,9 @@ public class Main {
                     String commentID = inputArray[2];
                     Functions.editRestaurantComment(commentID);
                 } else if (inputArray[0].equals("DISPLAY") && inputArray[1].equals("RATING") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser == null) {
-                    System.out.println("This restaurant gets the rate of \"" + Restaurant.loggedInRestaurantForUser.getRating() + "\" from the Users!");
+                    Functions.displayRestaurantRating((User) Role.loggedInRole,Restaurant.loggedInRestaurantForUser);
                 } else if (inputArray[0].equals("SUBMIT") && inputArray[1].equals("RATING") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser == null) {
-                    Functions.getRestaurantRating(staticArrayLists);
+                    Functions.getRestaurantRating(staticArrayLists,(User) Role.loggedInRole,Restaurant.loggedInRestaurantForUser);
                 } else if (inputArray[0].equals("EDIT") && inputArray[1].equals("RATING") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser == null) {
                     String ratingID = inputArray[2];
                     Functions.editRestaurantRating(ratingID);
@@ -280,12 +280,14 @@ public class Main {
                     String commentID = inputArray[2];
                     Functions.editFoodComment(commentID);
                 } else if (inputArray[0].equals("DISPLAY") && inputArray[1].equals("RATING") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser != null) {
-                    System.out.println("This food gets the rate of \"" + Food.selectedFoodForUser.getRating() + "\" from the Users!");
+                    Functions.displayFoodRating((User) Role.loggedInRole, Food.selectedFoodForUser);
                 } else if (inputArray[0].equals("SUBMIT") && inputArray[1].equals("RATING") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser != null) {
-                    Functions.getFoodRating(staticArrayLists);
+                    Functions.getFoodRating(staticArrayLists,(User) Role.loggedInRole,Food.selectedFoodForUser);
                 } else if (inputArray[0].equals("EDIT") && inputArray[1].equals("RATING") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser != null) {
                     String ratingID = inputArray[2];
                     Functions.editFoodRating(ratingID);
+                } else if (inputArray[0].equals("ADD") && inputArray[1].equals("THIS") && inputArray[2].equals("FOOD") && inputArray[3].equals("TO") && inputArray[4].equals("CART") && Role.loggedInRoleExistance && Role.loggedInRole instanceof User && Restaurant.loggedInRestaurantForUser != null && Food.selectedFoodForUser != null){
+                    Functions.addFoodToCart( (User) Role.loggedInRole,Restaurant.loggedInRestaurantForUser,Food.selectedFoodForUser,staticArrayLists);
                 } else {
                     System.out.println("invalid command");
                 }
@@ -295,16 +297,15 @@ public class Main {
     }
     public static void serializeObjects(StaticArrayLists staticArrayLists){
         try{
-            ////////////////////////////////////////////////
-            FileWriter fileWriter = new FileWriter("D:\\Java\\Project\\OOP_Project\\StaticArrayLists.txt",false) ;
-            PrintWriter pw = new PrintWriter(fileWriter, false);
-            pw.flush();
-            pw.close();
-            fileWriter.close();
-            ////////////////////////////////////////////////
+//            ////////////////////////////////////////////////
+//            FileWriter fileWriter = new FileWriter("D:\\Java\\Project\\OOP_Project\\StaticArrayLists.txt",false) ;
+//            PrintWriter pw = new PrintWriter(fileWriter, false);
+//            pw.flush();
+//            pw.close();
+//            fileWriter.close();
+//            ////////////////////////////////////////////////
             FileOutputStream fileout = new FileOutputStream("D:\\Java\\Project\\OOP_Project\\StaticArrayLists.txt") ;
             ObjectOutputStream out = new ObjectOutputStream(fileout) ;
-            out.writeObject("");
             out.writeObject(staticArrayLists);
             out.close();
             fileout.close();
