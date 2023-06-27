@@ -1,5 +1,6 @@
 package src.Map;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class Dijkstra<T> {
@@ -7,9 +8,14 @@ public class Dijkstra<T> {
     private Node<T> target, root;
     private ArrayList<Node<T>> path = null;
     private Long cost = null;
+    private static final int TIME = 60;
 
     public Dijkstra(Graph<T> graph) {
         this.graph = graph;
+    }
+
+    protected Dijkstra(String path) {
+        this(Graph.readGraph(path));
     }
 
     public Boolean search(T root, T target) {
@@ -68,11 +74,21 @@ public class Dijkstra<T> {
         this.cost = cost;
     }
 
-    public ArrayList<Node<T>> getPath() {
-        return path;
+    public ArrayList<T> getPath() {
+        ArrayList<T> p = new ArrayList<>();
+        for(int i = path.size()-1; i >= 0; i--) p.add(path.get(i).getName());
+        return p;
     }
 
     public Long getCost() {
         return cost;
+    }
+
+    public Long getTime() {
+        return (cost * Dijkstra.TIME);
+    }
+
+    public Boolean isSame(T start, T end) {
+        return (this.root.getName() == start && this.target.getName() == end);
     }
 }
